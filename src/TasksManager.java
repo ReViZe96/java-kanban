@@ -8,33 +8,13 @@ public class TasksManager {
     public HashMap<Long, SubTask> allSubtasks;
     public HashMap<Long, Task> allTasks;
 
-    public static int idCounter = 0;
+    public static int idCounter = 1;
 
-    public TasksManager () {
+    public TasksManager() {
         allEpiks = new HashMap<>();
         allSubtasks = new HashMap<>();
         allTasks = new HashMap<>();
     }
-
-    /*
-    public Epik epikSample = new Epik();
-    public SubTask subTaskSample = new SubTask();
-    public Task taskSample = new Task();
-
-    public Object getTaskType (Object object) {
-        Object taskType = new Object();
-        if (epikSample.getClass().equals(object.getClass())) {
-            taskType = epikSample.getClass();
-        } else if (subTaskSample.getClass().equals(object.getClass())) {
-            taskType = subTaskSample.getClass();
-        } else if (taskSample.getClass().equals(object.getClass())) {
-            taskType = taskSample.getClass();
-        } else {
-            System.out.println("Сущность не является задачей!");
-        }
-        return taskType;
-    }
-     */
 
     public Collection<Epik> getAllEpiks() {
         return allEpiks.values();
@@ -144,7 +124,7 @@ public class TasksManager {
         }
     }
 
-    public void removeEpikById (long id) {
+    public void removeEpikById(long id) {
         if (allEpiks.containsKey(id)) {
             allEpiks.remove(id);
         } else {
@@ -153,7 +133,7 @@ public class TasksManager {
         }
     }
 
-    public void removeSubTaskById (long id) {
+    public void removeSubTaskById(long id) {
         if (allSubtasks.containsKey(id)) {
             allSubtasks.remove(id);
         } else {
@@ -162,7 +142,7 @@ public class TasksManager {
         }
     }
 
-    public void removeTaskById (long id) {
+    public void removeTaskById(long id) {
         if (allTasks.containsKey(id)) {
             allTasks.remove(id);
         } else {

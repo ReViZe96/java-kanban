@@ -5,13 +5,13 @@ public class Task {
     protected long id;
     protected TaskStatus status;
 
-    protected Task (String name, String description, long id) {
+    protected Task(String name, String description, long id) {
         this.name = name;
         this.description = description;
         this.id = id;
     }
 
-    protected Task (String name, String description, long id, TaskStatus status) {
+    protected Task(String name, String description, long id, TaskStatus status) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -62,14 +62,31 @@ public class Task {
     public int hashCode() {
         int hash = 0;
         if (this.id != 0) {
-            hash = (int)this.id;
+            hash = (int) this.id;
         }
         return hash;
     }
 
     @Override
     public String toString() {
-        return name + " c с идентификатором = " + id;
+        String result;
+        result = name + " с идентификатором = " + id;
+        if (status != null) {
+            result += " сейчас в статусе : ";
+            switch (status) {
+                case TaskStatus.NEW:
+                    result += "НОВАЯ";
+                    break;
+                case TaskStatus.IN_PROGRESS:
+                    result += "В РАБОТЕ";
+                    break;
+                case TaskStatus.DONE:
+                    result += "ВЫПОЛНЕНА";
+                    break;
+            }
+        } else {
+            result += " по каким-то причинам не имеет статуса";
+        }
+        return result;
     }
-
 }

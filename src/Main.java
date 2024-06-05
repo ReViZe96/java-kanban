@@ -1,6 +1,6 @@
-import java.util.ArrayList;
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.Collection;
-import java.util.HashMap;
 
 public class Main {
 
@@ -14,116 +14,209 @@ public class Main {
                 TaskStatus.NEW);
         tasksManager.addTask(awakening);
         tasksManager.addTask(sleeping);
-        System.out.println("Задачи " + awakening + " и " + sleeping + " созданы!");
+        System.out.println("Созданы задачи:");
+        System.out.println(awakening);
+        System.out.println(sleeping);
 
-        SubTask makingCrutch = new SubTask("Создать основу приложения", "Покостылить",
-                ++TasksManager.idCounter, TaskStatus.NEW);
-        SubTask refactoring = new SubTask("Осуществить рефакторинг кода", "Сделать все красиво",
-                ++TasksManager.idCounter, TaskStatus.NEW);
-        tasksManager.addSubTask(makingCrutch);
-        tasksManager.addSubTask(refactoring);
-        System.out.println("Подзадачи " + makingCrutch + " и " + refactoring + " созданы!");
 
-        ArrayList<SubTask> developingStages = new ArrayList<>();
-        developingStages.add(makingCrutch);
-        developingStages.add(refactoring);
-        Epik developingOfTracker = new Epik("Разработать трекер задач", "Создать работающее приложение",
-                ++TasksManager.idCounter, developingStages);
-        tasksManager.addEpik(developingOfTracker);
-        System.out.println("Эпик " + developingOfTracker + " создан!");
-
+        Epik fitness = new Epik("Заниматься спортом", "Хотя бы раз в день", ++TasksManager.idCounter);
 
         SubTask pullUps = new SubTask("Подтягивания на перекладине", "Подтянуться 10 раз",
-                ++TasksManager.idCounter, TaskStatus.NEW);
+                ++TasksManager.idCounter, TaskStatus.NEW, fitness);
+        SubTask pushUps = new SubTask("Отжиматься от пола", "Минимум 3 раза в день",
+                ++TasksManager.idCounter, TaskStatus.NEW, fitness);
+        SubTask benchPress = new SubTask("Жим гантели лёжа", "Два и более раза за день",
+                ++TasksManager.idCounter, TaskStatus.NEW, fitness);
         tasksManager.addSubTask(pullUps);
-        System.out.println("Подзадача " + pullUps + " создана!");
+        tasksManager.addSubTask(pushUps);
+        tasksManager.addSubTask(benchPress);
+        System.out.println();
+        System.out.println("Созданы подзадачи:");
+        System.out.println(pullUps);
+        System.out.println(pushUps);
+        System.out.println(benchPress);
 
-
-        ArrayList<SubTask> fitnessStages = new ArrayList<>();
-        fitnessStages.add(pullUps);
-        Epik fitness = new Epik("Заниматься спортом", "Хотя бы раз в день", ++TasksManager.idCounter,
-                fitnessStages);
+        fitness.addSubTask(pullUps);
+        fitness.addSubTask(pushUps);
+        fitness.addSubTask(benchPress);
         tasksManager.addEpik(fitness);
-        System.out.println("Эпик " + fitness + " создан!");
+        System.out.println();
+        System.out.println("Создан эпик:");
+        System.out.println(fitness);
+
+
+        Epik developingOfTracker = new Epik("Разработать трекер задач", "Создать работающее приложение",
+                ++TasksManager.idCounter);
+
+        SubTask makingCrutch = new SubTask("Создать основу приложения", "Покостылить",
+                ++TasksManager.idCounter, TaskStatus.NEW, developingOfTracker);
+        SubTask refactoring = new SubTask("Осуществить рефакторинг кода", "Сделать все красиво",
+                ++TasksManager.idCounter, TaskStatus.NEW, developingOfTracker);
+        tasksManager.addSubTask(makingCrutch);
+        tasksManager.addSubTask(refactoring);
+        System.out.println();
+        System.out.println("Созданы подзадачи:");
+        System.out.println(makingCrutch);
+        System.out.println(refactoring);
+
+        developingOfTracker.addSubTask(makingCrutch);
+        developingOfTracker.addSubTask(refactoring);
+        tasksManager.addEpik(developingOfTracker);
+        System.out.println();
+        System.out.println("Создан эпик:");
+        System.out.println(developingOfTracker);
+
+
+        Epik nothing = new Epik("Ничего не делать", "Только не забывать дышать", ++TasksManager.idCounter);
+
+        SubTask breathing = new SubTask("Дышать", "Размеренно и спокойно", ++TasksManager.idCounter,
+                TaskStatus.NEW, nothing);
+        tasksManager.addSubTask(breathing);
+        System.out.println();
+        System.out.println("Создана подзадача:");
+        System.out.println(breathing);
+
+        nothing.addSubTask(breathing);
+        tasksManager.addEpik(nothing);
+        System.out.println();
+        System.out.println("Создан эпик:");
+        System.out.println(nothing);
 
 
         System.out.println();
-        System.out.println("Список всех задач:");
+        System.out.println("СПИСОК ВСЕХ ЗАДАЧ:");
         Collection<Task> allTasks = tasksManager.getAllTasks();
-        for (Task task : allTasks) {
-            System.out.println(task);
-        }
+        printTasks(allTasks);
 
         System.out.println();
-        System.out.println("Список всех подзадач:");
+        System.out.println("СПИСОК ВСЕХ ПОДЗАДАЧ:");
         Collection<SubTask> allSubtasks = tasksManager.getAllSubTasks();
-        for (SubTask subTask : allSubtasks) {
-            System.out.println(subTask);
-        }
+        printSubTasks(allSubtasks);
 
         System.out.println();
-        System.out.println("Список всех эпиков:");
+        System.out.println("СПИСОК ВСЕХ ЭПИКОВ:");
         Collection<Epik> allEpiks = tasksManager.getAllEpiks();
-        for (Epik epik : allEpiks) {
-            System.out.println(epik);
-        }
+        printEpiks(allEpiks);
+
 
         System.out.println();
-        System.out.println("Обновление статусов задач:");
+        System.out.println("Обновление статусов задач...");
         tasksManager.updateTask(new Task(awakening.getName(), awakening.getDescription(), awakening.getId(), TaskStatus.DONE));
         tasksManager.updateTask(new Task(sleeping.getName(), sleeping.getDescription(), sleeping.getId(), TaskStatus.IN_PROGRESS));
 
         System.out.println();
-        System.out.println("Обновление статусов подзадач:");
+        System.out.println("Обновление статусов подзадач...");
         tasksManager.updateSubTask(new SubTask(makingCrutch.getName(), makingCrutch.getDescription(),
                 makingCrutch.getId(), TaskStatus.IN_PROGRESS));
         tasksManager.updateSubTask(new SubTask(refactoring.getName(), refactoring.getDescription(), refactoring.getId(),
                 TaskStatus.DONE));
         tasksManager.updateSubTask(new SubTask(pullUps.getName(), pullUps.getDescription(), pullUps.getId(), TaskStatus.DONE));
+        //пока что не обновляются статусы подзадач в эпике
+        tasksManager.updateEpik(new Epik(nothing.getName(), "Ну прям совсем ничего не делать!", nothing.getId(),
+                nothing.getSubtasks()));
 
         System.out.println();
-        System.out.println("Список всех задач после обновления:");
+        System.out.println("СПИСОК ВСЕХ ЗАДАЧ ПОСЛЕ ОБНОВЛЕНИЯ:");
         Collection<Task> allTasksAfterUpdate = tasksManager.getAllTasks();
-        for (Task task : allTasksAfterUpdate) {
-            System.out.println(task);
-        }
+        printTasks(allTasksAfterUpdate);
 
         System.out.println();
-        System.out.println("Список всех подзадач после обновления:");
+        System.out.println("СПИСОК ВСЕХ ПОДЗАДАЧ ПОСЛЕ ОБНОВЛЕНИЯ:");
         Collection<SubTask> allSubtasksAfterUpdate = tasksManager.getAllSubTasks();
-        for (SubTask subTask : allSubtasksAfterUpdate) {
-            System.out.println(subTask);
-        }
+        printSubTasks(allSubtasksAfterUpdate);
 
         System.out.println();
-        System.out.println("Список всех эпиков после обновления:");
+        System.out.println("СПИСОК ВСЕХ ЭПИКОВ ПОСЛЕ ОБНОВЛЕНИЯ:");
         Collection<Epik> allEpiksAfterUpdate = tasksManager.getAllEpiks();
-        for (Epik epik : allEpiksAfterUpdate) {
-            System.out.println(epik);
-        }
+        printEpiks(allEpiksAfterUpdate);
+
 
         tasksManager.removeTaskById(sleeping.getId());
         System.out.println();
-        System.out.println("Задача " + sleeping + " удалена");
+        System.out.println("Удалена задача:");
+        System.out.println(sleeping.getName());
 
+        fitness.removeSubtasks(benchPress);
+        tasksManager.removeSubTaskById(benchPress.getId());
         System.out.println();
-        System.out.println("Список всех задач после удаления " + sleeping + ":");
-        Collection<Task> allTasksAfterDeleting = tasksManager.getAllTasks();
-        for (Task task : allTasksAfterDeleting) {
-            System.out.println(task);
-        }
+        System.out.println("Удалена подзадача:");
+        System.out.println(benchPress.getName());
 
         tasksManager.removeEpikById(developingOfTracker.getId());
         System.out.println();
-        System.out.println("Эпик " + developingOfTracker + " удален");
+        System.out.println("Удален эпик:");
+        System.out.println(developingOfTracker.getName());
 
         System.out.println();
-        System.out.println("Список всех эпиков после удаления " + developingOfTracker + ":");
+        System.out.println("СПИСОК ВСЕХ ЗАДАЧ ПОСЛЕ УДАЛЕНИЯ ЗАДАЧИ " + sleeping.getName() + ":");
+        Collection<Task> allTasksAfterDeleting = tasksManager.getAllTasks();
+        printTasks(allTasksAfterDeleting);
+
+        System.out.println();
+        System.out.println("СПИСОК ВСЕХ ПОДЗАДАЧ ПОСЛЕ УДАЛЕНИЯ ПОДЗАДАЧИ " + benchPress.getName() + ":");
+        Collection<SubTask> allSubTasksAfterDeleting = tasksManager.getAllSubTasks();
+        printSubTasks(allSubTasksAfterDeleting);
+
+        System.out.println();
+        System.out.println("СПИСОК ВСЕХ ЭПИКОВ ПОСЛЕ УДАЛЕНИЯ ЭПИКА " + developingOfTracker.getName() + ":");
         Collection<Epik> allEpiksAfterDeleting = tasksManager.getAllEpiks();
-        for (Epik epik : allEpiksAfterDeleting) {
-            System.out.println(epik);
+        printEpiks(allEpiksAfterDeleting);
+
+
+        long awakeningId = awakening.getId();
+        System.out.println("Поиск задачи c идентификатором " + awakeningId + ":");
+        Task taskFoundById = tasksManager.getTaskById(awakeningId);
+        System.out.println("Найдена задача " + taskFoundById);
+
+        long pullUpsId = pullUps.getId();
+        System.out.println("Поиск подзадачи c идентификатором " + pullUpsId + ":");
+        SubTask subTaskFoundById = tasksManager.getSubTaskById(pullUpsId);
+        System.out.println("Найдена задача " + subTaskFoundById);
+
+        long nothingId = nothing.getId();
+        System.out.println("Поиск эпика c идентификатором " + nothingId + ":");
+        Epik epikFoundById = tasksManager.getEpikById(nothingId);
+        System.out.println("Найден эпик " + epikFoundById);
+
+
+        System.out.println();
+        System.out.println("Удаление всех задач, подзадач и эпиков!");
+        tasksManager.removeAllTasks();
+        tasksManager.removeAllSubtasks();
+        tasksManager.removeAllEpiks();
+        System.out.println();
+
+        System.out.println("Список всех задач после полного удаления:");
+        Collection<Task> allTasksAfterFullDeleting = tasksManager.getAllTasks();
+        printTasks(allTasksAfterFullDeleting);
+        System.out.println();
+        System.out.println("Список всех подзадач после полного удаления:");
+        Collection<SubTask> allSubTasksAfterFullDeleting = tasksManager.getAllSubTasks();
+        printSubTasks(allSubTasksAfterFullDeleting);
+        System.out.println();
+        System.out.println("Список всех эпиков после полного удаления:");
+        Collection<Epik> allEpiksAfterFullDeleting = tasksManager.getAllEpiks();
+        printEpiks(allEpiksAfterFullDeleting);
+    }
+
+    public static void printTasks(Collection<Task> tasks) {
+        for (Task task : tasks) {
+            System.out.println(task);
         }
     }
 
+    public static void printSubTasks(Collection<SubTask> subTasks) {
+        for (SubTask subTask : subTasks) {
+            System.out.println(subTask);
+        }
+    }
+
+    public static void printEpiks(Collection<Epik> epiks) {
+        for (Epik epik : epiks) {
+            System.out.print(epik);
+            System.out.println("Описание эпика: " + epik.getDescription());
+            System.out.println();
+        }
+    }
 
 }
