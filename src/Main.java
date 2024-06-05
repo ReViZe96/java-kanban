@@ -1,5 +1,3 @@
-import org.w3c.dom.ls.LSOutput;
-
 import java.util.Collection;
 
 public class Main {
@@ -107,11 +105,13 @@ public class Main {
         System.out.println();
         System.out.println("Обновление статусов подзадач...");
         tasksManager.updateSubTask(new SubTask(makingCrutch.getName(), makingCrutch.getDescription(),
-                makingCrutch.getId(), TaskStatus.IN_PROGRESS));
+                makingCrutch.getId(), TaskStatus.IN_PROGRESS, makingCrutch.getEpik()));
         tasksManager.updateSubTask(new SubTask(refactoring.getName(), refactoring.getDescription(), refactoring.getId(),
-                TaskStatus.DONE));
-        tasksManager.updateSubTask(new SubTask(pullUps.getName(), pullUps.getDescription(), pullUps.getId(), TaskStatus.DONE));
-        //пока что не обновляются статусы подзадач в эпике
+                TaskStatus.DONE, refactoring.getEpik()));
+        tasksManager.updateSubTask(new SubTask(pullUps.getName(), pullUps.getDescription(), pullUps.getId(), TaskStatus.DONE,
+                pullUps.getEpik()));
+        tasksManager.updateSubTask(new SubTask(breathing.getName(), breathing.getDescription(), breathing.getId(),
+                TaskStatus.DONE, breathing.getEpik()));
         tasksManager.updateEpik(new Epik(nothing.getName(), "Ну прям совсем ничего не делать!", nothing.getId(),
                 nothing.getSubtasks()));
 

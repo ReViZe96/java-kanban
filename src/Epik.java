@@ -26,8 +26,10 @@ public class Epik extends Task {
                 switch (subTask.getStatus()) {
                     case TaskStatus.NEW:
                         newSubtaskCount++;
+                        break;
                     case TaskStatus.DONE:
                         doneSubtaskCount++;
+                        break;
                 }
             }
             if (newSubtaskCount == amountOfSubtasks) {
@@ -47,6 +49,7 @@ public class Epik extends Task {
 
     public void setSubtasks(ArrayList<SubTask> subtasks) {
         this.subtasks = subtasks;
+        this.status = calculateStatus(subtasks);
     }
 
     public void removeSubtasks(SubTask subTask) {
@@ -74,7 +77,7 @@ public class Epik extends Task {
     public String toString() {
         String result = super.toString();
         if (subtasks != null) {
-            result += "Cписок подзадач эпика: \n";
+            result += " Cписок подзадач эпика: \n";
             for (SubTask subTask : subtasks) {
                 String status = null;
                 if (subTask.getStatus() != null) {

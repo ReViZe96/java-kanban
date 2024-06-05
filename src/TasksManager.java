@@ -97,21 +97,36 @@ public class TasksManager {
         }
     }
 
-    public void updateEpik(Epik epik) {
-        long epikId = epik.getId();
+    public void updateEpik(Epik updatedEpik) {
+        long epikId = updatedEpik.getId();
         if (allEpiks.containsKey(epikId)) {
+            Epik epik = allEpiks.get(epikId);
+            epik.setSubtasks(updatedEpik.getSubtasks());
             allEpiks.put(epikId, epik);
         } else {
-            throw new RuntimeException("Эпика " + epik + " пока не существует");
+            throw new RuntimeException("Эпика " + updatedEpik + " пока не существует");
         }
     }
 
-    public void updateSubTask(SubTask subTask) {
-        long subTaskId = subTask.getId();
+    public void updateSubTask(SubTask updatedSubTask) {
+        long subTaskId = updatedSubTask.getId();
         if (allSubtasks.containsKey(subTaskId)) {
-            allSubtasks.put(subTaskId, subTask);
+            SubTask subTask = getSubTaskById(subTaskId);
+            Epik epik = subTask.getEpik();
+            ArrayList<SubTask> subTasks = epik.getSubtasks();
+            if (subTasks.contains(subTask)) {
+                for (int i = 0; i < subTasks.size(); i++) {
+                    if (subTasks.get(i).getId() == (updatedSubTask.getId())) {
+                        subTasks.set(i, updatedSubTask);
+                    }
+                }
+            } else {
+                subTasks.add(updatedSubTask);
+            }
+            epik.setSubtasks(subTasks);
+            allSubtasks.put(subTaskId, updatedSubTask);
         } else {
-            throw new RuntimeException("Подзадачи " + subTask + " пока не существует");
+            throw new RuntimeException("Подзадачи " + updatedSubTask + " пока не существует");
         }
     }
 
