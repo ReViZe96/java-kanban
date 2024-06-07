@@ -1,21 +1,13 @@
 public class Task {
 
+    protected long id;
     protected String name;
     protected String description;
-    protected long id;
     protected TaskStatus status;
 
-    protected Task(String name, String description, long id) {
+    protected Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.id = id;
-    }
-
-    protected Task(String name, String description, long id, TaskStatus status) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.status = status;
     }
 
     public String getName() {
@@ -38,8 +30,16 @@ public class Task {
         return this.id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public TaskStatus getStatus() {
         return this.status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
     @Override

@@ -1,22 +1,22 @@
 public class SubTask extends Task {
 
-    protected Epik epik;
+    private Epic epic;
 
-    protected SubTask(String name, String description, long id, TaskStatus status) {
-        super(name, description, id, status);
+    protected SubTask(String name, String description) {
+        super(name, description);
     }
 
-    protected SubTask(String name, String description, long id, TaskStatus status, Epik epik) {
-        super(name, description, id, status);
-        this.epik = epik;
+    protected SubTask(String name, String description, Epic epic) {
+        super(name, description);
+        this.epic = epic;
     }
 
-    public Epik getEpik() {
-        return this.epik;
+    public Epic getEpic() {
+        return this.epic;
     }
 
-    public void setEpik(Epik epik) {
-        this.epik = epik;
+    public void setEpic(Epic epic) {
+        this.epic = epic;
     }
 
 }

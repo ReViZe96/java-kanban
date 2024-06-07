@@ -6,25 +6,22 @@ public class Main {
 
         TasksManager tasksManager = new TasksManager();
 
-        Task awakening = new Task("Проснуться", "Необходимо проснуться в 8:00", TasksManager.idCounter,
-                TaskStatus.NEW);
-        Task sleeping = new Task("Заснуть", "Постараться заснуть раньше 1:00", ++TasksManager.idCounter,
-                TaskStatus.NEW);
+        Task awakening = new Task("Проснуться", "Необходимо проснуться в 8:00");
+        Task sleeping = new Task("Заснуть", "Постараться заснуть раньше 1:00");
         tasksManager.addTask(awakening);
         tasksManager.addTask(sleeping);
         System.out.println("Созданы задачи:");
         System.out.println(awakening);
         System.out.println(sleeping);
 
-
-        Epik fitness = new Epik("Заниматься спортом", "Хотя бы раз в день", ++TasksManager.idCounter);
-
-        SubTask pullUps = new SubTask("Подтягивания на перекладине", "Подтянуться 10 раз",
-                ++TasksManager.idCounter, TaskStatus.NEW, fitness);
-        SubTask pushUps = new SubTask("Отжиматься от пола", "Минимум 3 раза в день",
-                ++TasksManager.idCounter, TaskStatus.NEW, fitness);
-        SubTask benchPress = new SubTask("Жим гантели лёжа", "Два и более раза за день",
-                ++TasksManager.idCounter, TaskStatus.NEW, fitness);
+        Epic fitness = new Epic("Заниматься спортом", "Хотя бы раз в день");
+        tasksManager.addEpic(fitness);
+        System.out.println();
+        System.out.println("Создан эпик:");
+        System.out.println(fitness);
+        SubTask pullUps = new SubTask("Подтягивания на перекладине", "Подтянуться 10 раз", fitness);
+        SubTask pushUps = new SubTask("Отжиматься от пола", "Минимум 3 раза в день", fitness);
+        SubTask benchPress = new SubTask("Жим гантели лёжа", "Два и более раза за день", fitness);
         tasksManager.addSubTask(pullUps);
         tasksManager.addSubTask(pushUps);
         tasksManager.addSubTask(benchPress);
@@ -34,22 +31,13 @@ public class Main {
         System.out.println(pushUps);
         System.out.println(benchPress);
 
-        fitness.addSubTask(pullUps);
-        fitness.addSubTask(pushUps);
-        fitness.addSubTask(benchPress);
-        tasksManager.addEpik(fitness);
+        Epic developingOfTracker = new Epic("Разработать трекер задач", "Создать работающее приложение");
+        tasksManager.addEpic(developingOfTracker);
         System.out.println();
         System.out.println("Создан эпик:");
-        System.out.println(fitness);
-
-
-        Epik developingOfTracker = new Epik("Разработать трекер задач", "Создать работающее приложение",
-                ++TasksManager.idCounter);
-
-        SubTask makingCrutch = new SubTask("Создать основу приложения", "Покостылить",
-                ++TasksManager.idCounter, TaskStatus.NEW, developingOfTracker);
-        SubTask refactoring = new SubTask("Осуществить рефакторинг кода", "Сделать все красиво",
-                ++TasksManager.idCounter, TaskStatus.NEW, developingOfTracker);
+        System.out.println(developingOfTracker);
+        SubTask makingCrutch = new SubTask("Создать основу приложения", "Покостылить", developingOfTracker);
+        SubTask refactoring = new SubTask("Осуществить рефакторинг кода", "Сделать все красиво", developingOfTracker);
         tasksManager.addSubTask(makingCrutch);
         tasksManager.addSubTask(refactoring);
         System.out.println();
@@ -57,29 +45,16 @@ public class Main {
         System.out.println(makingCrutch);
         System.out.println(refactoring);
 
-        developingOfTracker.addSubTask(makingCrutch);
-        developingOfTracker.addSubTask(refactoring);
-        tasksManager.addEpik(developingOfTracker);
+        Epic nothing = new Epic("Ничего не делать", "Только не забывать дышать");
+        tasksManager.addEpic(nothing);
         System.out.println();
         System.out.println("Создан эпик:");
-        System.out.println(developingOfTracker);
-
-
-        Epik nothing = new Epik("Ничего не делать", "Только не забывать дышать", ++TasksManager.idCounter);
-
-        SubTask breathing = new SubTask("Дышать", "Размеренно и спокойно", ++TasksManager.idCounter,
-                TaskStatus.NEW, nothing);
+        System.out.println(nothing);
+        SubTask breathing = new SubTask("Дышать", "Размеренно и спокойно", nothing);
         tasksManager.addSubTask(breathing);
         System.out.println();
         System.out.println("Создана подзадача:");
         System.out.println(breathing);
-
-        nothing.addSubTask(breathing);
-        tasksManager.addEpik(nothing);
-        System.out.println();
-        System.out.println("Создан эпик:");
-        System.out.println(nothing);
-
 
         System.out.println();
         System.out.println("СПИСОК ВСЕХ ЗАДАЧ:");
@@ -93,27 +68,30 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ВСЕХ ЭПИКОВ:");
-        Collection<Epik> allEpiks = tasksManager.getAllEpiks();
-        printEpiks(allEpiks);
+        Collection<Epic> allEpics = tasksManager.getAllEpics();
+        printEpics(allEpics);
 
 
         System.out.println();
         System.out.println("Обновление статусов задач...");
-        tasksManager.updateTask(new Task(awakening.getName(), awakening.getDescription(), awakening.getId(), TaskStatus.DONE));
-        tasksManager.updateTask(new Task(sleeping.getName(), sleeping.getDescription(), sleeping.getId(), TaskStatus.IN_PROGRESS));
+        awakening.setStatus(TaskStatus.DONE);
+        tasksManager.updateTask(awakening);
+        sleeping.setStatus(TaskStatus.IN_PROGRESS);
+        tasksManager.updateTask(sleeping);
 
         System.out.println();
         System.out.println("Обновление статусов подзадач...");
-        tasksManager.updateSubTask(new SubTask(makingCrutch.getName(), makingCrutch.getDescription(),
-                makingCrutch.getId(), TaskStatus.IN_PROGRESS, makingCrutch.getEpik()));
-        tasksManager.updateSubTask(new SubTask(refactoring.getName(), refactoring.getDescription(), refactoring.getId(),
-                TaskStatus.DONE, refactoring.getEpik()));
-        tasksManager.updateSubTask(new SubTask(pullUps.getName(), pullUps.getDescription(), pullUps.getId(), TaskStatus.DONE,
-                pullUps.getEpik()));
-        tasksManager.updateSubTask(new SubTask(breathing.getName(), breathing.getDescription(), breathing.getId(),
-                TaskStatus.DONE, breathing.getEpik()));
-        tasksManager.updateEpik(new Epik(nothing.getName(), "Ну прям совсем ничего не делать!", nothing.getId(),
-                nothing.getSubtasks()));
+        makingCrutch.setStatus(TaskStatus.IN_PROGRESS);
+        tasksManager.updateSubTask(makingCrutch);
+        refactoring.setStatus(TaskStatus.DONE);
+        tasksManager.updateSubTask(refactoring);
+        pullUps.setStatus(TaskStatus.DONE);
+        tasksManager.updateSubTask(pullUps);
+        breathing.setStatus(TaskStatus.DONE);
+        tasksManager.updateSubTask(breathing);
+
+        nothing.setDescription("Ну прям совсем ничего не делать!");
+        tasksManager.updateEpic(nothing);
 
         System.out.println();
         System.out.println("СПИСОК ВСЕХ ЗАДАЧ ПОСЛЕ ОБНОВЛЕНИЯ:");
@@ -127,8 +105,8 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ВСЕХ ЭПИКОВ ПОСЛЕ ОБНОВЛЕНИЯ:");
-        Collection<Epik> allEpiksAfterUpdate = tasksManager.getAllEpiks();
-        printEpiks(allEpiksAfterUpdate);
+        Collection<Epic> allEpicsAfterUpdate = tasksManager.getAllEpics();
+        printEpics(allEpicsAfterUpdate);
 
 
         tasksManager.removeTaskById(sleeping.getId());
@@ -136,13 +114,12 @@ public class Main {
         System.out.println("Удалена задача:");
         System.out.println(sleeping.getName());
 
-        fitness.removeSubtasks(benchPress);
         tasksManager.removeSubTaskById(benchPress.getId());
         System.out.println();
         System.out.println("Удалена подзадача:");
         System.out.println(benchPress.getName());
 
-        tasksManager.removeEpikById(developingOfTracker.getId());
+        tasksManager.removeEpicById(developingOfTracker.getId());
         System.out.println();
         System.out.println("Удален эпик:");
         System.out.println(developingOfTracker.getName());
@@ -159,8 +136,8 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ВСЕХ ЭПИКОВ ПОСЛЕ УДАЛЕНИЯ ЭПИКА " + developingOfTracker.getName() + ":");
-        Collection<Epik> allEpiksAfterDeleting = tasksManager.getAllEpiks();
-        printEpiks(allEpiksAfterDeleting);
+        Collection<Epic> allEpicsAfterDeleting = tasksManager.getAllEpics();
+        printEpics(allEpicsAfterDeleting);
 
 
         long awakeningId = awakening.getId();
@@ -175,15 +152,15 @@ public class Main {
 
         long nothingId = nothing.getId();
         System.out.println("Поиск эпика c идентификатором " + nothingId + ":");
-        Epik epikFoundById = tasksManager.getEpikById(nothingId);
-        System.out.println("Найден эпик " + epikFoundById);
+        Epic epicFoundById = tasksManager.getEpicById(nothingId);
+        System.out.println("Найден эпик " + epicFoundById);
 
 
         System.out.println();
         System.out.println("Удаление всех задач, подзадач и эпиков!");
         tasksManager.removeAllTasks();
         tasksManager.removeAllSubtasks();
-        tasksManager.removeAllEpiks();
+        tasksManager.removeAllEpics();
         System.out.println();
 
         System.out.println("Список всех задач после полного удаления:");
@@ -195,8 +172,8 @@ public class Main {
         printSubTasks(allSubTasksAfterFullDeleting);
         System.out.println();
         System.out.println("Список всех эпиков после полного удаления:");
-        Collection<Epik> allEpiksAfterFullDeleting = tasksManager.getAllEpiks();
-        printEpiks(allEpiksAfterFullDeleting);
+        Collection<Epic> allEpicsAfterFullDeleting = tasksManager.getAllEpics();
+        printEpics(allEpicsAfterFullDeleting);
     }
 
     public static void printTasks(Collection<Task> tasks) {
@@ -211,10 +188,10 @@ public class Main {
         }
     }
 
-    public static void printEpiks(Collection<Epik> epiks) {
-        for (Epik epik : epiks) {
-            System.out.print(epik);
-            System.out.println("Описание эпика: " + epik.getDescription());
+    public static void printEpics(Collection<Epic> epics) {
+        for (Epic epic : epics) {
+            System.out.print(epic);
+            System.out.println("Описание эпика: " + epic.getDescription());
             System.out.println();
         }
     }
