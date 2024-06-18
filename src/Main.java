@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        TasksManager tasksManager = new TasksManager();
+        InMemoryTasksManager tasksManager = new InMemoryTasksManager();
 
         Task awakening = new Task("Проснуться", "Необходимо проснуться в 8:00");
         Task sleeping = new Task("Заснуть", "Постараться заснуть раньше 1:00");
@@ -174,6 +174,8 @@ public class Main {
         System.out.println("Список всех эпиков после полного удаления:");
         Collection<Epic> allEpicsAfterFullDeleting = tasksManager.getAllEpics();
         printEpics(allEpicsAfterFullDeleting);
+
+        //byId все оставшиеся таски, а потом getHistory()
     }
 
     public static void printTasks(Collection<Task> tasks) {

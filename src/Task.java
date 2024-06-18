@@ -4,6 +4,7 @@ public class Task {
     protected String name;
     protected String description;
     protected TaskStatus status;
+    protected long amountOfView = 0;
 
     protected Task(String name, String description) {
         this.name = name;
@@ -40,6 +41,14 @@ public class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public long getAmountOfView() {
+        return this.amountOfView;
+    }
+
+    public void setAmountOfView(long amountOfView) {
+        this.amountOfView = amountOfView;
     }
 
     @Override
