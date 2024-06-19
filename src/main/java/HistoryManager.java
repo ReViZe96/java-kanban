@@ -6,8 +6,4 @@ public interface HistoryManager {
 
     ArrayList<Task> getHistory();
 
-    ArrayList<Long> getHistoryOfView();
-
-    void setHistoryOfView(ArrayList<Long> historyOfView);
-
 }

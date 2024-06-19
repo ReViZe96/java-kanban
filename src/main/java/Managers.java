@@ -1,7 +1,7 @@
 public class Managers {
 
     public static TaskManager getDefault() {
-        return new InMemoryTasksManager();
+        return new InMemoryTaskManager();
     }
 
     public static HistoryManager getDefaultHistory() {

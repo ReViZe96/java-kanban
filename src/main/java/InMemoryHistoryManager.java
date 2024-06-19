@@ -2,22 +2,9 @@ import java.util.ArrayList;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    protected ArrayList<Long> historyOfView;
-    protected TaskManager taskManager;
+    public static ArrayList<Long> historyOfView = new ArrayList<>();
 
     public InMemoryHistoryManager() {
-        historyOfView = new ArrayList<>();
-        taskManager = new InMemoryTasksManager();
-    }
-
-    @Override
-    public ArrayList<Long> getHistoryOfView() {
-        return this.historyOfView;
-    }
-
-    @Override
-    public void setHistoryOfView(ArrayList<Long> historyOfView) {
-        this.historyOfView = historyOfView;
     }
 
     @Override
@@ -29,7 +16,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     public ArrayList<Task> getHistory() {
         ArrayList<Long> last10ViewedTaskIds = new ArrayList<>();
         if (historyOfView.size() <= 10) {
-            last10ViewedTaskIds.addAll(historyOfView);
+            for (int i = historyOfView.size() - 1; i >= 0; i--) {
+                last10ViewedTaskIds.add(historyOfView.get(i));
+            }
         } else {
             for (int i = historyOfView.size() - 1; i >= historyOfView.size() - 10; i--) {
                 last10ViewedTaskIds.add(historyOfView.get(i));
@@ -37,9 +26,19 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         ArrayList<Task> last10ViewedTasks = new ArrayList<>();
         for (Long viewedTaskId : last10ViewedTaskIds) {
-            Task task = taskManager.getTaskById(viewedTaskId);
+            Task task = InMemoryTaskManager.allEpics.get(viewedTaskId);
             if (task != null) {
                 last10ViewedTasks.add(task);
+            } else {
+                task = InMemoryTaskManager.allSubtasks.get(viewedTaskId);
+                if (task != null) {
+                    last10ViewedTasks.add(task);
+                } else {
+                    task = InMemoryTaskManager.allTasks.get(viewedTaskId);
+                    if (task != null) {
+                        last10ViewedTasks.add(task);
+                    }
+                }
             }
         }
         return last10ViewedTasks;

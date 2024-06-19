@@ -1,10 +1,13 @@
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        InMemoryTasksManager tasksManager = new InMemoryTasksManager();
+        InMemoryTaskManager tasksManager = new InMemoryTaskManager();
+        HistoryManager historyManager = Managers.getDefaultHistory();
+        ArrayList<Task> last10viewedTasks;
 
         Task awakening = new Task("Проснуться", "Необходимо проснуться в 8:00");
         Task sleeping = new Task("Заснуть", "Постараться заснуть раньше 1:00");
@@ -62,14 +65,29 @@ public class Main {
         printTasks(allTasks);
 
         System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
+
+        System.out.println();
         System.out.println("СПИСОК ВСЕХ ПОДЗАДАЧ:");
         Collection<SubTask> allSubtasks = tasksManager.getAllSubTasks();
         printSubTasks(allSubtasks);
 
         System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
+
+        System.out.println();
         System.out.println("СПИСОК ВСЕХ ЭПИКОВ:");
         Collection<Epic> allEpics = tasksManager.getAllEpics();
         printEpics(allEpics);
+
+        System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
 
 
         System.out.println();
@@ -99,14 +117,29 @@ public class Main {
         printTasks(allTasksAfterUpdate);
 
         System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
+
+        System.out.println();
         System.out.println("СПИСОК ВСЕХ ПОДЗАДАЧ ПОСЛЕ ОБНОВЛЕНИЯ:");
         Collection<SubTask> allSubtasksAfterUpdate = tasksManager.getAllSubTasks();
         printSubTasks(allSubtasksAfterUpdate);
 
         System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
+
+        System.out.println();
         System.out.println("СПИСОК ВСЕХ ЭПИКОВ ПОСЛЕ ОБНОВЛЕНИЯ:");
         Collection<Epic> allEpicsAfterUpdate = tasksManager.getAllEpics();
         printEpics(allEpicsAfterUpdate);
+
+        System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
 
 
         tasksManager.removeTaskById(sleeping.getId());
@@ -130,14 +163,29 @@ public class Main {
         printTasks(allTasksAfterDeleting);
 
         System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
+
+        System.out.println();
         System.out.println("СПИСОК ВСЕХ ПОДЗАДАЧ ПОСЛЕ УДАЛЕНИЯ ПОДЗАДАЧИ " + benchPress.getName() + ":");
         Collection<SubTask> allSubTasksAfterDeleting = tasksManager.getAllSubTasks();
         printSubTasks(allSubTasksAfterDeleting);
 
         System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
+
+        System.out.println();
         System.out.println("СПИСОК ВСЕХ ЭПИКОВ ПОСЛЕ УДАЛЕНИЯ ЭПИКА " + developingOfTracker.getName() + ":");
         Collection<Epic> allEpicsAfterDeleting = tasksManager.getAllEpics();
         printEpics(allEpicsAfterDeleting);
+
+        System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
 
 
         long awakeningId = awakening.getId();
@@ -145,15 +193,30 @@ public class Main {
         Task taskFoundById = tasksManager.getTaskById(awakeningId);
         System.out.println("Найдена задача " + taskFoundById);
 
+        System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
+
         long pullUpsId = pullUps.getId();
         System.out.println("Поиск подзадачи c идентификатором " + pullUpsId + ":");
         SubTask subTaskFoundById = tasksManager.getSubTaskById(pullUpsId);
         System.out.println("Найдена задача " + subTaskFoundById);
 
+        System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
+
         long nothingId = nothing.getId();
         System.out.println("Поиск эпика c идентификатором " + nothingId + ":");
         Epic epicFoundById = tasksManager.getEpicById(nothingId);
         System.out.println("Найден эпик " + epicFoundById);
+
+        System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
 
 
         System.out.println();
@@ -175,7 +238,11 @@ public class Main {
         Collection<Epic> allEpicsAfterFullDeleting = tasksManager.getAllEpics();
         printEpics(allEpicsAfterFullDeleting);
 
-        //byId все оставшиеся таски, а потом getHistory()
+        System.out.println();
+        System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
+        last10viewedTasks = historyManager.getHistory();
+        printTasks(last10viewedTasks);
+
     }
 
     public static void printTasks(Collection<Task> tasks) {
