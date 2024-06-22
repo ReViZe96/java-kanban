@@ -1,3 +1,8 @@
+package managers;
+
+import managers.interfaces.HistoryManager;
+import managers.interfaces.TaskManager;
+
 public class Managers {
 
     public static TaskManager getDefault() {

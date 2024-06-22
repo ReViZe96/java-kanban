@@ -1,5 +1,13 @@
-import java.util.ArrayList;
+import managers.interfaces.HistoryManager;
+import managers.InMemoryTaskManager;
+import managers.Managers;
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
+import tasks.TaskStatus;
+
 import java.util.Collection;
+import java.util.List;
 
 public class Main {
 
@@ -7,7 +15,7 @@ public class Main {
 
         InMemoryTaskManager tasksManager = new InMemoryTaskManager();
         HistoryManager historyManager = Managers.getDefaultHistory();
-        ArrayList<Task> last10viewedTasks;
+        List<Task> last10viewedTasks;
 
         Task awakening = new Task("Проснуться", "Необходимо проснуться в 8:00");
         Task sleeping = new Task("Заснуть", "Постараться заснуть раньше 1:00");

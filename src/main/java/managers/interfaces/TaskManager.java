@@ -1,7 +1,15 @@
-import java.util.ArrayList;
+package managers.interfaces;
+
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
+
 import java.util.Collection;
+import java.util.HashMap;
 
 public interface TaskManager {
+
+    HashMap<Long, Task> getAllTypeTask();
 
     Collection<Epic> getAllEpics();
 

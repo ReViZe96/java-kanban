@@ -1,3 +1,5 @@
+package tasks;
+
 public class Task {
 
     protected long id;
@@ -6,7 +8,7 @@ public class Task {
     protected TaskStatus status;
     protected long amountOfView = 0;
 
-    protected Task(String name, String description) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
     }

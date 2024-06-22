@@ -1,3 +1,5 @@
+package tasks;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +18,7 @@ public class SubTaskTest {
 
     /*
     Тест public void shouldNotAddSubTaskToItselfsEpic() не нужен, т.к.
-     у аргумента тестируемого метода void setSubtasks(ArrayList<SubTask> subTasks)
+     у аргумента тестируемого метода void setSubtasks(ArrayList<tasks.SubTask> subTasks)
      присутствует параметризация и строгое ограничение типа
      */
 

@@ -1,12 +1,14 @@
+package tasks;
+
 public class SubTask extends Task {
 
     private Epic epic;
 
-    protected SubTask(String name, String description) {
+    public SubTask(String name, String description) {
         super(name, description);
     }
 
-    protected SubTask(String name, String description, Epic epic) {
+    public SubTask(String name, String description, Epic epic) {
         super(name, description);
         this.epic = epic;
     }

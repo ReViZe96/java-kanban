@@ -1,3 +1,5 @@
+package tasks;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +19,8 @@ public class EpicTest {
 
     /*
     Тест public void shouldNotAddEpicToItselfsSubtasks() не нужен, т.к.
-     тестируемый метод void setEpic(Epic epic)
-     принимает в качестве аргумента только объекты типа Epic
+     тестируемый метод void setEpic(tasks.Epic epic)
+     принимает в качестве аргумента только объекты типа tasks.Epic
      */
 
 }

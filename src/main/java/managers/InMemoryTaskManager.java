@@ -1,3 +1,12 @@
+package managers;
+
+import managers.interfaces.HistoryManager;
+import managers.interfaces.TaskManager;
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
+import tasks.TaskStatus;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -5,12 +14,20 @@ import java.util.HashMap;
 public class InMemoryTaskManager implements TaskManager {
 
     public static int idCounter = 0;
-    public static HashMap<Long, Epic> allEpics = new HashMap<>();
-    public static HashMap<Long, SubTask> allSubtasks = new HashMap<>();
-    public static HashMap<Long, Task> allTasks = new HashMap<>();
-    public static HistoryManager historyManager = Managers.getDefaultHistory();
+    private static HashMap<Long, Epic> allEpics = new HashMap<>();
+    private static HashMap<Long, SubTask> allSubtasks = new HashMap<>();
+    private static HashMap<Long, Task> allTasks = new HashMap<>();
+    private static HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager() {
+    }
+
+    public HashMap<Long, Task> getAllTypeTask() {
+        HashMap<Long, Task> allTypesTasks = new HashMap<>();
+        allTypesTasks.putAll(allEpics);
+        allTypesTasks.putAll(allSubtasks);
+        allTypesTasks.putAll(allTasks);
+        return allTypesTasks;
     }
 
     @Override
@@ -18,9 +35,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epic : allEpics.values()) {
             epic.setAmountOfView(epic.getAmountOfView() + 1);
             updateEpic(epic);
-            ArrayList<Long> historyOfView = InMemoryHistoryManager.historyOfView;
-            historyOfView.add(epic.getId());
-            InMemoryHistoryManager.historyOfView = historyOfView;
+            historyManager.add(epic);
         }
         return allEpics.values();
     }
@@ -30,9 +45,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (SubTask subTask : allSubtasks.values()) {
             subTask.setAmountOfView(subTask.getAmountOfView() + 1);
             updateSubTask(subTask);
-            ArrayList<Long> historyOfView = InMemoryHistoryManager.historyOfView;
-            historyOfView.add(subTask.getId());
-            InMemoryHistoryManager.historyOfView = historyOfView;
+            historyManager.add(subTask);
         }
         return allSubtasks.values();
     }
@@ -42,9 +55,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Task task : allTasks.values()) {
             task.setAmountOfView(task.getAmountOfView() + 1);
             updateTask(task);
-            ArrayList<Long> historyOfView = InMemoryHistoryManager.historyOfView;
-            historyOfView.add(task.getId());
-            InMemoryHistoryManager.historyOfView = historyOfView;
+            historyManager.add(task);
         }
         return allTasks.values();
     }
@@ -81,9 +92,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic = allEpics.get(id);
             epic.setAmountOfView(epic.getAmountOfView() + 1);
             updateEpic(epic);
-            ArrayList<Long> historyOfView = InMemoryHistoryManager.historyOfView;
-            historyOfView.add(id);
-            InMemoryHistoryManager.historyOfView = historyOfView;
+            historyManager.add(epic);
         } else {
             System.out.println("Эпика с идентификатором " + id + " пока не существует");
             return null;
@@ -98,9 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
             subTask = allSubtasks.get(id);
             subTask.setAmountOfView(subTask.getAmountOfView() + 1);
             updateSubTask(subTask);
-            ArrayList<Long> historyOfView = InMemoryHistoryManager.historyOfView;
-            historyOfView.add(id);
-            InMemoryHistoryManager.historyOfView = historyOfView;
+            historyManager.add(subTask);
         } else {
             System.out.println("Подзадачи с идентификатором " + id + " пока не существует");
             return null;
@@ -115,9 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
             task = allTasks.get(id);
             task.setAmountOfView(task.getAmountOfView() + 1);
             updateTask(task);
-            ArrayList<Long> historyOfView = InMemoryHistoryManager.historyOfView;
-            historyOfView.add(id);
-            InMemoryHistoryManager.historyOfView = historyOfView;
+            historyManager.add(task);
         } else {
             System.out.println("Задачи с идентификатором " + id + " пока не существует");
             return null;

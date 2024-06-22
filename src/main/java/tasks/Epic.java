@@ -1,14 +1,16 @@
+package tasks;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
 
     private ArrayList<SubTask> subtasks = new ArrayList<>();
 
-    protected Epic(String name, String description) {
+    public Epic(String name, String description) {
         super(name, description);
     }
 
-    protected Epic(String name, String description, ArrayList<SubTask> subTasks) {
+    public Epic(String name, String description, ArrayList<SubTask> subTasks) {
         super(name, description);
         this.subtasks = subTasks;
     }
