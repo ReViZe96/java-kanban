@@ -1,6 +1,5 @@
-import managers.interfaces.HistoryManager;
-import managers.InMemoryTaskManager;
 import managers.Managers;
+import managers.interfaces.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -13,8 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        InMemoryTaskManager tasksManager = new InMemoryTaskManager();
-        HistoryManager historyManager = Managers.getDefaultHistory();
+        TaskManager tasksManager = Managers.getDefault();
         List<Task> last10viewedTasks;
 
         Task awakening = new Task("Проснуться", "Необходимо проснуться в 8:00");
@@ -74,7 +72,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
         System.out.println();
@@ -84,7 +82,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
         System.out.println();
@@ -94,7 +92,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
 
@@ -126,7 +124,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
         System.out.println();
@@ -136,7 +134,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
         System.out.println();
@@ -146,7 +144,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
 
@@ -172,7 +170,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
         System.out.println();
@@ -182,7 +180,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
         System.out.println();
@@ -192,7 +190,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
 
@@ -203,7 +201,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
         long pullUpsId = pullUps.getId();
@@ -213,7 +211,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
         long nothingId = nothing.getId();
@@ -223,7 +221,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
 
@@ -248,7 +246,7 @@ public class Main {
 
         System.out.println();
         System.out.println("СПИСОК ПОСЛЕДНИХ 10 ПРОСМОТРЕННЫХ ЗАДАЧ:");
-        last10viewedTasks = historyManager.getHistory();
+        last10viewedTasks = tasksManager.getHistory();
         printTasks(last10viewedTasks);
 
     }

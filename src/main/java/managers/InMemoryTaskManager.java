@@ -10,6 +10,7 @@ import tasks.TaskStatus;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -282,6 +283,11 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         return EpicStatus;
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 
 }

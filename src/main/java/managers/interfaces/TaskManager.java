@@ -6,6 +6,7 @@ import tasks.Task;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -46,5 +47,7 @@ public interface TaskManager {
     void removeSubTaskById(long id);
 
     void removeTaskById(long id);
+
+    List<Task> getHistory();
 
 }
