@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface TaskManager {
 
-    HashMap<Long, Task> getAllTypeTask();
+    HashMap<Integer, Task> getAllTypeTask();
 
     Collection<Epic> getAllEpics();
 
@@ -24,11 +24,11 @@ public interface TaskManager {
 
     void removeAllTasks();
 
-    Epic getEpicById(long id);
+    Epic getEpicById(int id);
 
-    SubTask getSubTaskById(long id);
+    SubTask getSubTaskById(int id);
 
-    Task getTaskById(long id);
+    Task getTaskById(int id);
 
     void addEpic(Epic epic);
 
@@ -42,11 +42,11 @@ public interface TaskManager {
 
     void updateTask(Task task);
 
-    void removeEpicById(long id);
+    void removeEpicById(int id);
 
-    void removeSubTaskById(long id);
+    void removeSubTaskById(int id);
 
-    void removeTaskById(long id);
+    void removeTaskById(int id);
 
     List<Task> getHistory();
 

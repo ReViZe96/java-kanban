@@ -7,24 +7,21 @@ import tasks.SubTask;
 import tasks.Task;
 import tasks.TaskStatus;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
     public static int idCounter = 0;
-    private static HashMap<Long, Epic> allEpics = new HashMap<>();
-    private static HashMap<Long, SubTask> allSubtasks = new HashMap<>();
-    private static HashMap<Long, Task> allTasks = new HashMap<>();
+    private static HashMap<Integer, Epic> allEpics = new HashMap<>();
+    private static HashMap<Integer, SubTask> allSubtasks = new HashMap<>();
+    private static HashMap<Integer, Task> allTasks = new HashMap<>();
     private static HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager() {
     }
 
-    public HashMap<Long, Task> getAllTypeTask() {
-        HashMap<Long, Task> allTypesTasks = new HashMap<>();
+    public HashMap<Integer, Task> getAllTypeTask() {
+        HashMap<Integer, Task> allTypesTasks = new HashMap<>();
         allTypesTasks.putAll(allEpics);
         allTypesTasks.putAll(allSubtasks);
         allTypesTasks.putAll(allTasks);
@@ -63,7 +60,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllEpics() {
+        List<Integer> epicIds = new ArrayList<>();
+        Set<Map.Entry<Integer, Epic>> epicsEntrySet = allEpics.entrySet();
+        for (Map.Entry<Integer, Epic> epicEntry : epicsEntrySet) {
+            epicIds.add(epicEntry.getKey());
+        }
         allEpics.clear();
+        for (Integer epicId : epicIds) {
+            historyManager.remove(epicId);
+        }
     }
 
     @Override
@@ -78,16 +83,32 @@ public class InMemoryTaskManager implements TaskManager {
                 }
             }
         }
+        List<Integer> subTaskIds = new ArrayList<>();
+        Set<Map.Entry<Integer, SubTask>> subTasksEntrySet = allSubtasks.entrySet();
+        for (Map.Entry<Integer, SubTask> subTaskEntry : subTasksEntrySet) {
+            subTaskIds.add(subTaskEntry.getKey());
+        }
         allSubtasks.clear();
+        for (Integer subTaskId : subTaskIds) {
+            historyManager.remove(subTaskId);
+        }
     }
 
     @Override
     public void removeAllTasks() {
+        List<Integer> taskIds = new ArrayList<>();
+        Set<Map.Entry<Integer, Task>> tasksEntrySet = allTasks.entrySet();
+        for (Map.Entry<Integer, Task> taskEntry : tasksEntrySet) {
+            taskIds.add(taskEntry.getKey());
+        }
         allTasks.clear();
+        for (Integer taskId : taskIds) {
+            historyManager.remove(taskId);
+        }
     }
 
     @Override
-    public Epic getEpicById(long id) {
+    public Epic getEpicById(int id) {
         Epic epic;
         if (allEpics.containsKey(id)) {
             epic = allEpics.get(id);
@@ -102,7 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public SubTask getSubTaskById(long id) {
+    public SubTask getSubTaskById(int id) {
         SubTask subTask;
         if (allSubtasks.containsKey(id)) {
             subTask = allSubtasks.get(id);
@@ -117,7 +138,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(long id) {
+    public Task getTaskById(int id) {
         Task task;
         if (allTasks.containsKey(id)) {
             task = allTasks.get(id);
@@ -177,7 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic updatedEpic) {
-        long epicId = updatedEpic.getId();
+        int epicId = updatedEpic.getId();
         if (allEpics.containsKey(epicId)) {
             Epic epic = allEpics.get(epicId);
             ArrayList<SubTask> subTasks = updatedEpic.getSubtasks();
@@ -191,7 +212,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubTask(SubTask updatedSubTask) {
-        long subTaskId = updatedSubTask.getId();
+        int subTaskId = updatedSubTask.getId();
         if (allSubtasks.containsKey(subTaskId)) {
             SubTask subTask = allSubtasks.get(subTaskId);
             Epic epic = subTask.getEpic();
@@ -214,7 +235,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
-        long taskId = task.getId();
+        int taskId = task.getId();
         if (allTasks.containsKey(taskId)) {
             allTasks.put(taskId, task);
         } else {
@@ -222,9 +243,10 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public void removeEpicById(long id) {
+    public void removeEpicById(int id) {
         if (allEpics.containsKey(id)) {
             allEpics.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Эпик с идентификатором " + id + " нельзя удалить, т.к. " +
                     "его пока не существует");
@@ -232,7 +254,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeSubTaskById(long id) {
+    public void removeSubTaskById(int id) {
         if (allSubtasks.containsKey(id)) {
             SubTask subTask = allSubtasks.get(id);
             Epic epic = subTask.getEpic();
@@ -240,6 +262,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setStatus(calculateStatus(epic.getSubtasks()));
             allEpics.put(epic.getId(), epic);
             allSubtasks.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Подзадачу с идентификатором " + id + " нельзя удалить, т.к. " +
                     "её пока не существует");
@@ -247,9 +270,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeTaskById(long id) {
+    public void removeTaskById(int id) {
         if (allTasks.containsKey(id)) {
             allTasks.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Задачу с идентификатором " + id + " нельзя удалить, т.к. " +
                     "её пока не существует");

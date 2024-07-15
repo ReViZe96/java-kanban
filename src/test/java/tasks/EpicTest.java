@@ -8,10 +8,10 @@ public class EpicTest {
     @Test
     public void shouldEpicsWithSameIdIsEquals() {
         Epic firstEpic = new Epic("Первый эпик", "1");
-        firstEpic.setId(2L);
+        firstEpic.setId(2);
 
         Epic secondEpic = new Epic("Второй эпик", "2");
-        secondEpic.setId(2L);
+        secondEpic.setId(2);
 
         Assertions.assertEquals(firstEpic, secondEpic);
     }

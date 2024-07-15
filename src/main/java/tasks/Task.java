@@ -2,7 +2,7 @@ package tasks;
 
 public class Task {
 
-    protected long id;
+    protected int id;
     protected String name;
     protected String description;
     protected TaskStatus status;
@@ -29,11 +29,11 @@ public class Task {
         this.description = description;
     }
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

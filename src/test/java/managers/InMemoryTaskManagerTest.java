@@ -53,7 +53,7 @@ public class InMemoryTaskManagerTest {
     public void shouldTasksWithSameIdIsNotConflicted() {
         Task taskWithGeneratedId = new Task("Первая задача", "Id будет сгенерирован в процессе добавления");
         taskManager.addTask(taskWithGeneratedId);
-        long id = taskWithGeneratedId.getId();
+        int id = taskWithGeneratedId.getId();
         Assertions.assertEquals(taskWithGeneratedId, taskManager.getTaskById(id));
 
         Task taskWithAddedId = new Task("Вторая задача", "Id будет задан вручную");

@@ -2,22 +2,34 @@ package managers;
 
 import managers.interfaces.HistoryManager;
 import managers.interfaces.TaskManager;
+import managers.utils.Node;
 import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private static List<Long> historyOfView = new ArrayList<>();
+    protected Node<Task> head = new Node<>(null, null, null);
+    protected Node<Task> tail = new Node<>(null, null, null);
+
+    private static Map<Integer, Node<Task>> historyOfView = new HashMap<>();
     private static TaskManager taskManager = Managers.getDefault();
 
     public InMemoryHistoryManager() {
+        head.setNext(tail);
+        tail.setPrev(head);
     }
 
     @Override
     public void add(Task task) {
-        historyOfView.add(task.getId());
+        //Предыдущий просмотр должен быть удалён сразу после появления нового — за O(1)O(1)
+        if (historyOfView.containsKey(task.getId())) {
+            Node<Task> node = historyOfView.get(task.getId());
+            removeNode(node);
+        }
+
+        Node<Task> newNode = linkLast(task);
+        historyOfView.put(task.getId(), newNode);
     }
 
     @Override
@@ -27,24 +39,38 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        ArrayList<Long> last10ViewedTaskIds = new ArrayList<>();
-        if (historyOfView.size() <= 10) {
-            for (int i = historyOfView.size() - 1; i >= 0; i--) {
-                last10ViewedTaskIds.add(historyOfView.get(i));
-            }
-        } else {
-            for (int i = historyOfView.size() - 1; i >= historyOfView.size() - 10; i--) {
-                last10ViewedTaskIds.add(historyOfView.get(i));
-            }
+        Set<Map.Entry<Integer, Node<Task>>> historyEntrySet = historyOfView.entrySet();
+        ArrayList<Task> viewedTasks = new ArrayList<>();
+        for (Map.Entry<Integer, Node<Task>> historyEntry : historyEntrySet) {
+            viewedTasks.add(historyEntry.getValue().data);
         }
-        ArrayList<Task> last10ViewedTasks = new ArrayList<>();
-        for (Long viewedTaskId : last10ViewedTaskIds) {
-            Task task = taskManager.getAllTypeTask().get(viewedTaskId);
-            if (task != null) {
-                last10ViewedTasks.add(task);
-            }
-        }
-        return last10ViewedTasks;
+        Collections.reverse(viewedTasks);
+        return viewedTasks;
     }
 
+    @Override
+    public void remove(int id) {
+        if (historyOfView.containsKey(id)) {
+            historyOfView.remove(id);
+        }
+    }
+
+    public Node<Task> linkLast(Task task) {
+        final Node<Task> oldTail = this.tail;
+        final Node<Task> newNode = new Node<>(null, task, oldTail);
+        this.tail = newNode;
+        if (oldTail == null) {
+            this.head = newNode;
+        } else {
+            oldTail.prev = newNode;
+        }
+        return newNode;
+    }
+
+    public void removeNode(Node<Task> node) {
+        Task removedTask = node.getData();
+        Integer removedTasksId = removedTask.getId();
+        historyOfView.remove(removedTasksId);
+    }
 }
+
