@@ -281,12 +281,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private TaskStatus calculateStatus(ArrayList<SubTask> subTasks) {
-        TaskStatus EpicStatus;
+        TaskStatus epicStatus;
         int newSubtaskCount = 0;
         int doneSubtaskCount = 0;
         int amountOfSubtasks = subTasks.size();
         if (amountOfSubtasks <= 0) {
-            EpicStatus = TaskStatus.NEW;
+            epicStatus = TaskStatus.NEW;
         } else {
             for (SubTask subTask : subTasks) {
                 switch (subTask.getStatus()) {
@@ -299,14 +299,14 @@ public class InMemoryTaskManager implements TaskManager {
                 }
             }
             if (newSubtaskCount == amountOfSubtasks) {
-                EpicStatus = TaskStatus.NEW;
+                epicStatus = TaskStatus.NEW;
             } else if (doneSubtaskCount == amountOfSubtasks) {
-                EpicStatus = TaskStatus.DONE;
+                epicStatus = TaskStatus.DONE;
             } else {
-                EpicStatus = TaskStatus.IN_PROGRESS;
+                epicStatus = TaskStatus.IN_PROGRESS;
             }
         }
-        return EpicStatus;
+        return epicStatus;
     }
 
     @Override
