@@ -1,25 +1,27 @@
 package managers.utils;
 
-public class Node<Task> {
-    public Task data;
-    public Node<Task> next;
-    public Node<Task> prev;
+import tasks.Task;
 
-    public Node(Node<Task> prev, Task data, Node<Task> next) {
+public class Node<T extends Task> {
+    public T data;
+    public Node<T> next;
+    public Node<T> prev;
+
+    public Node(Node<T> prev, T data, Node<T> next) {
         this.data = data;
         this.next = next;
         this.prev = prev;
     }
 
-    public Task getData() {
+    public T getData() {
         return this.data;
     }
 
-    public void setNext(Node<Task> next) {
+    public void setNext(Node<T> next) {
         this.next = next;
     }
 
-    public void setPrev(Node<Task> prev) {
+    public void setPrev(Node<T> prev) {
         this.prev = prev;
     }
 }
