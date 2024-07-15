@@ -22,7 +22,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        //Предыдущий просмотр должен быть удалён сразу после появления нового — за O(1)O(1)
         if (historyOfView.containsKey(task.getId())) {
             Node<Task> node = historyOfView.get(task.getId());
             removeNode(node);
