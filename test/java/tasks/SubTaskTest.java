@@ -8,10 +8,10 @@ public class SubTaskTest {
     @Test
     public void shouldSubTasksWithSameIdIsEquals() {
         SubTask firstSubTask = new SubTask("Первая подзадача", "1");
-        firstSubTask.setId(3L);
+        firstSubTask.setId(3);
 
         SubTask secondSubTask = new SubTask("Вторая подзадача", "2");
-        secondSubTask.setId(3L);
+        secondSubTask.setId(3);
 
         Assertions.assertEquals(firstSubTask, secondSubTask);
     }
