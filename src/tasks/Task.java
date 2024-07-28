@@ -8,9 +8,7 @@ public class Task implements Comparable {
     protected TaskStatus status;
 
     public Task() {
-
     }
-    ;
 
     public Task(String name, String description) {
         this.name = name;
