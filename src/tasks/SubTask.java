@@ -4,7 +4,10 @@ public class SubTask extends Task {
 
     private Epic epic;
 
-    public SubTask() {};
+    public SubTask() {
+
+    }
+    ;
 
     public SubTask(String name, String description) {
         super(name, description);
