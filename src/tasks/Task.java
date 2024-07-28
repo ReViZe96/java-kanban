@@ -1,12 +1,13 @@
 package tasks;
 
-public class Task {
+public class Task implements Comparable {
 
     protected int id;
     protected String name;
     protected String description;
     protected TaskStatus status;
-    protected long amountOfView = 0;
+
+    public Task() {};
 
     public Task(String name, String description) {
         this.name = name;
@@ -43,14 +44,6 @@ public class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
-    }
-
-    public long getAmountOfView() {
-        return this.amountOfView;
-    }
-
-    public void setAmountOfView(long amountOfView) {
-        this.amountOfView = amountOfView;
     }
 
     @Override
@@ -100,4 +93,12 @@ public class Task {
         }
         return result;
     }
+
+    @Override
+    public int compareTo(Object obj) {
+        Task task = (Task) obj;
+        return this.id - task.getId();
+
+    }
+
 }
