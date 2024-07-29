@@ -3,6 +3,7 @@ package managers;
 import managers.exceptions.ManagerLoadException;
 import managers.interfaces.HistoryManager;
 import managers.interfaces.TaskManager;
+import managers.services.CSVFormat;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -34,7 +35,7 @@ public class Managers {
             while (bufferedReader.ready()) {
                 String currentLine = bufferedReader.readLine();
                 if (!currentLine.equals("id,type,name,status,description,epic,subtasks")) {
-                    taskWithType.putAll(fileBackedTaskManager.fromString(currentLine, loadedTasksInfo));
+                    taskWithType.putAll(CSVFormat.fromString(currentLine, loadedTasksInfo));
                 }
             }
         } catch (IOException e) {

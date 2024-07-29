@@ -6,13 +6,12 @@ public class Task implements Comparable {
     protected String name;
     protected String description;
     protected TaskStatus status;
-
-    public Task() {
-    }
+    protected TaskType taskType;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
+        this.taskType = TaskType.TASK;
     }
 
     public String getName() {
@@ -45,6 +44,14 @@ public class Task implements Comparable {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public TaskType getType() {
+        return this.taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
     }
 
     @Override
