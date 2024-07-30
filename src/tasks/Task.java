@@ -1,16 +1,17 @@
 package tasks;
 
-public class Task {
+public class Task implements Comparable {
 
     protected int id;
     protected String name;
     protected String description;
     protected TaskStatus status;
-    protected long amountOfView = 0;
+    protected TaskType taskType;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
+        this.taskType = TaskType.TASK;
     }
 
     public String getName() {
@@ -45,12 +46,12 @@ public class Task {
         this.status = status;
     }
 
-    public long getAmountOfView() {
-        return this.amountOfView;
+    public TaskType getType() {
+        return this.taskType;
     }
 
-    public void setAmountOfView(long amountOfView) {
-        this.amountOfView = amountOfView;
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
     }
 
     @Override
@@ -100,4 +101,12 @@ public class Task {
         }
         return result;
     }
+
+    @Override
+    public int compareTo(Object obj) {
+        Task task = (Task) obj;
+        return this.id - task.getId();
+
+    }
+
 }

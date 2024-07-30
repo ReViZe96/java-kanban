@@ -1,13 +1,12 @@
 package managers;
 
 import managers.interfaces.TaskManager;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 import tasks.TaskStatus;
+
 
 public class InMemoryTaskManagerTest {
 
@@ -16,6 +15,13 @@ public class InMemoryTaskManagerTest {
     @BeforeAll
     public static void init() {
         taskManager = Managers.getDefault();
+    }
+
+    @AfterAll
+    public static void removeAllTasks() {
+        taskManager.removeAllTasks();
+        taskManager.removeAllEpics();
+        taskManager.removeAllSubtasks();
     }
 
     @Test
@@ -67,7 +73,6 @@ public class InMemoryTaskManagerTest {
         Task beforeAddTask = new Task("Добавляемая задача", "added");
         beforeAddTask.setId(1);
         beforeAddTask.setStatus(TaskStatus.NEW);
-        beforeAddTask.setAmountOfView(0);
         taskManager.addTask(beforeAddTask);
 
         Task afterAddTask = taskManager.getTaskById(beforeAddTask.getId());
@@ -76,6 +81,5 @@ public class InMemoryTaskManagerTest {
         Assertions.assertEquals(beforeAddTask.getName(), afterAddTask.getName());
         Assertions.assertEquals(beforeAddTask.getStatus(), afterAddTask.getStatus());
         Assertions.assertEquals(beforeAddTask.getDescription(), afterAddTask.getDescription());
-        Assertions.assertEquals(beforeAddTask.getAmountOfView(), afterAddTask.getAmountOfView());
     }
 }

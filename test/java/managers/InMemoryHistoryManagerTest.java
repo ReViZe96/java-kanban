@@ -2,6 +2,7 @@ package managers;
 
 import managers.interfaces.HistoryManager;
 import managers.interfaces.TaskManager;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,13 @@ public class InMemoryHistoryManagerTest {
         taskManager.addTask(task);
         taskManager.addTask(awakening);
         taskManager.addTask(sleeping);
+    }
+
+    @AfterAll
+    public static void removeAllTasks() {
+        taskManager.removeAllTasks();
+        taskManager.removeAllEpics();
+        taskManager.removeAllSubtasks();
     }
 
     @Test
