@@ -2,9 +2,10 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Optional;
 
-public class Task implements Comparable {
+public class Task implements Comparable, Comparator {
 
     protected int id;
     protected String name;
@@ -110,7 +111,7 @@ public class Task implements Comparable {
     public int hashCode() {
         int hash = 0;
         if (this.id != 0) {
-            hash = (int) this.id;
+            hash = this.id;
         }
         return hash;
     }
@@ -154,6 +155,26 @@ public class Task implements Comparable {
         Task task = (Task) obj;
         return this.id - task.getId();
 
+    }
+
+    @Override
+    public int compare(Object first, Object second) {
+        Task firstTask = (Task) first;
+        Task secondTask = (Task) second;
+
+        LocalDateTime firstStartTime = firstTask.getStartTime();
+        LocalDateTime secondStartTime = secondTask.getStartTime();
+        if (firstStartTime != null && secondStartTime != null) {
+            if (firstStartTime.isEqual(secondStartTime)) {
+                return 0;
+            } else if (firstStartTime.isBefore(secondStartTime)) {
+                return 1;
+            } else {
+                return -1;
+            }
+        } else {
+            throw new RuntimeException("У одной из сравниваемых задач отсутствует время начала!");
+        }
     }
 
 }
