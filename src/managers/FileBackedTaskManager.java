@@ -113,7 +113,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         try (FileWriter fileWriter = new FileWriter(tasksFile); BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            String header = "id,type,name,status,description,epic,subtasks\n";
+            String header = "id,type,name,status,description,startTime,duration,epic,subtasks\n";
             bufferedWriter.write(header);
             for (String taskInfo : tasksInfo) {
                 bufferedWriter.write(taskInfo + "\n");

@@ -7,6 +7,9 @@ import tasks.SubTask;
 import tasks.Task;
 import tasks.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -158,6 +161,9 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         epic.setStatus(calculateStatus(subTasks));
+        epic.setStartTime(calculateEpicStartTime(subTasks));
+        epic.setDuration(calculateEpicDuration(subTasks));
+        epic.setEndTime(calculateEpicEndTime(subTasks));
         allEpics.put(epic.getId(), epic);
     }
 
@@ -171,6 +177,10 @@ public class InMemoryTaskManager implements TaskManager {
             ArrayList<SubTask> subTasks = epic.getSubtasks();
             subTasks.add(subTask);
             epic.setStatus(calculateStatus(subTasks));
+            epic.setStartTime(calculateEpicStartTime(subTasks));
+            epic.setDuration(calculateEpicDuration(subTasks));
+            epic.setEndTime(calculateEpicEndTime(subTasks));
+
         } else {
             if (epic != null) {
                 epic.setId(++InMemoryTaskManager.idCounter);
@@ -196,6 +206,10 @@ public class InMemoryTaskManager implements TaskManager {
             ArrayList<SubTask> subTasks = updatedEpic.getSubtasks();
             epic.setSubtasks(subTasks);
             epic.setStatus(calculateStatus(subTasks));
+            epic.setStartTime(calculateEpicStartTime(subTasks));
+            epic.setDuration(calculateEpicDuration(subTasks));
+            epic.setEndTime(calculateEpicEndTime(subTasks));
+
             allEpics.put(epicId, epic);
         } else {
             System.out.println("Эпика " + updatedEpic + " пока не существует");
@@ -218,6 +232,9 @@ public class InMemoryTaskManager implements TaskManager {
             }
             epic.setSubtasks(subTasks);
             epic.setStatus(calculateStatus(subTasks));
+            epic.setStartTime(calculateEpicStartTime(subTasks));
+            epic.setDuration(calculateEpicDuration(subTasks));
+            epic.setEndTime(calculateEpicEndTime(subTasks));
             allSubtasks.put(subTaskId, updatedSubTask);
             allEpics.put(epic.getId(), epic);
         } else {
@@ -299,6 +316,29 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         return epicStatus;
+    }
+
+    private Optional<LocalDateTime> calculateEpicStartTime(ArrayList<SubTask> subTasks) {
+        return subTasks.stream()
+                .filter(subTask -> subTask.getStartTime() != null)
+                .map(SubTask::getStartTime)
+                .min(Comparator.comparing(epoch -> epoch.toEpochSecond(ZoneOffset.UTC)));
+    }
+
+    private Duration calculateEpicDuration(ArrayList<SubTask> subTasks) {
+        long durationInSeconds = subTasks.stream()
+                .filter(subTask -> subTask.getDuration() != null)
+                .map(SubTask::getDuration)
+                .map(Duration::toSeconds)
+                .reduce(0L, Long::sum);
+        return Duration.ofSeconds(durationInSeconds);
+    }
+
+    private Optional<LocalDateTime> calculateEpicEndTime(ArrayList<SubTask> subTasks) {
+        return subTasks.stream()
+                .filter(subTask -> subTask.getStartTime() != null)
+                .map(SubTask::getEndTime)
+                .max(Comparator.comparing(epoch -> epoch.toEpochSecond(ZoneOffset.UTC)));
     }
 
     @Override

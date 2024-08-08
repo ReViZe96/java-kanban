@@ -5,6 +5,8 @@ import managers.exceptions.ManagerLoadException;
 import managers.interfaces.TaskManager;
 import tasks.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class CSVFormat {
@@ -33,7 +35,8 @@ public class CSVFormat {
         }
 
         return String.join(",", "" + task.getId(), taskType.toString(), task.getName(),
-                task.getStatus().toString(), task.getDescription(), epicId, subtasksId);
+                task.getStatus().toString(), task.getDescription(), task.getStartTime().toString(),
+                "" + task.getDuration().toSeconds(), epicId, subtasksId);
     }
 
     public static Map<Task, TaskType> fromString(String value, Map<String, List<String>> loadedTasksInfo) {
@@ -50,14 +53,16 @@ public class CSVFormat {
         String[] tasksField = value.split(",");
 
         if (TaskType.TASK.toString().equals(tasksField[1])) {
-            task = new Task(tasksField[2], tasksField[4]);
+            task = new Task(tasksField[2], tasksField[4]); //name and description
             task.setId(Integer.parseInt(tasksField[0]));
             task.setStatus(parseTaskType(tasksField[2], tasksField[3]));
+            task.setStartTime(Optional.of(LocalDateTime.parse(tasksField[5])));
+            task.setDuration(Duration.ofMinutes(Long.parseLong(tasksField[6])));
             taskWithType.put(task, TaskType.TASK);
 
         } else if (TaskType.EPIC.toString().equals(tasksField[1])) {
             ArrayList<SubTask> subTasks = new ArrayList<>();
-            String[] subTaskIds = tasksField[6].split(" ");
+            String[] subTaskIds = tasksField[8].split(" ");
             for (String subTaskId : subTaskIds) {
                 SubTask subTask;
                 if (!loadedTasksId.contains(subTaskId)) {
@@ -70,23 +75,27 @@ public class CSVFormat {
                 }
                 subTasks.add(subTask);
             }
-            task = new Epic(tasksField[2], tasksField[4], subTasks);
+            task = new Epic(tasksField[2], tasksField[4], subTasks); //name, description and subtasks
             task.setId(Integer.parseInt(tasksField[0]));
             task.setStatus(parseTaskType(tasksField[2], tasksField[3]));
+            task.setStartTime(Optional.of(LocalDateTime.parse(tasksField[5])));
+            task.setDuration(Duration.ofMinutes(Long.parseLong(tasksField[6])));
             taskWithType.put(task, TaskType.EPIC);
         } else if (TaskType.SUBTASK.toString().equals(tasksField[1])) {
             Epic epic;
-            if (!loadedTasksId.contains(tasksField[5])) {
-                epic = taskManager.getEpicById(Integer.parseInt(tasksField[5]));
+            if (!loadedTasksId.contains(tasksField[7])) {
+                epic = taskManager.getEpicById(Integer.parseInt(tasksField[7]));
             } else {
-                List<String> epicTaskInfo = loadedTasksInfo.get(tasksField[5]);
+                List<String> epicTaskInfo = loadedTasksInfo.get(tasksField[7]);
                 epic = new Epic(epicTaskInfo.get(0), epicTaskInfo.get(2));
-                epic.setId(Integer.parseInt(tasksField[5]));
+                epic.setId(Integer.parseInt(tasksField[7]));
                 epic.setStatus(parseTaskType(epicTaskInfo.get(0), epicTaskInfo.get(1)));
             }
-            task = new SubTask(tasksField[2], tasksField[4], epic);
+            task = new SubTask(tasksField[2], tasksField[4], epic); //name, description and epic
             task.setId(Integer.parseInt(tasksField[0]));
             task.setStatus(parseTaskType(tasksField[2], tasksField[3]));
+            task.setStartTime(Optional.of(LocalDateTime.parse(tasksField[5])));
+            task.setDuration(Duration.ofMinutes(Long.parseLong(tasksField[6])));
             taskWithType.put(task, TaskType.SUBTASK);
         } else {
             throw new ManagerLoadException("Ошибка загрузки задач. У задачи " + tasksField[2] +

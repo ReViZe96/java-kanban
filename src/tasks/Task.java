@@ -1,5 +1,9 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 public class Task implements Comparable {
 
     protected int id;
@@ -7,11 +11,21 @@ public class Task implements Comparable {
     protected String description;
     protected TaskStatus status;
     protected TaskType taskType;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.taskType = TaskType.TASK;
+    }
+
+    public Task(String name, String description, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.taskType = TaskType.TASK;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getName() {
@@ -52,6 +66,28 @@ public class Task implements Comparable {
 
     public void setTaskType(TaskType taskType) {
         this.taskType = taskType;
+    }
+
+    public LocalDateTime getStartTime() {
+        return this.startTime;
+    }
+
+    public void setStartTime(Optional<LocalDateTime> startTime) {
+        if (startTime.isPresent()) {
+            this.startTime = startTime.get();
+        }
+    }
+
+    public Duration getDuration() {
+        return this.duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return this.startTime.plus(this.duration);
     }
 
     @Override
@@ -99,6 +135,17 @@ public class Task implements Comparable {
         } else {
             result += " по каким-то причинам не имеет статуса";
         }
+        if (startTime != null) {
+            result += " Время начала - " + startTime + ".";
+        } else {
+            result += " Время начала не указана.";
+        }
+        if (duration != null) {
+            result += " Продолжительность в секундах = " + duration.toSeconds() + ".";
+        } else {
+            result += " Продолжительность не указана.";
+        }
+
         return result;
     }
 

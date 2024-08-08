@@ -34,7 +34,7 @@ public class Managers {
         try (FileReader fileReader = new FileReader(file); BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             while (bufferedReader.ready()) {
                 String currentLine = bufferedReader.readLine();
-                if (!currentLine.equals("id,type,name,status,description,epic,subtasks")) {
+                if (!currentLine.equals("id,type,name,status,description,startTime,duration,epic,subtasks")) {
                     taskWithType.putAll(CSVFormat.fromString(currentLine, loadedTasksInfo));
                 }
             }
@@ -94,13 +94,15 @@ public class Managers {
         try (FileReader fileReader = new FileReader(file); BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             while (bufferedReader.ready()) {
                 String currentLine = bufferedReader.readLine();
-                if (!currentLine.equals("id,type,name,status,description,epic,subtasks")) {
-                    List<String> nameStatusAndDescription = new ArrayList<>();
+                if (!currentLine.equals("id,type,name,status,description,startTime,duration,epic,subtasks")) {
+                    List<String> taskFields = new ArrayList<>();
                     String[] fieldInfo = currentLine.split(",");
-                    nameStatusAndDescription.add(fieldInfo[2]);
-                    nameStatusAndDescription.add(fieldInfo[3]);
-                    nameStatusAndDescription.add(fieldInfo[4]);
-                    loadedTaskInfo.put(fieldInfo[0], nameStatusAndDescription);
+                    taskFields.add(fieldInfo[2]); //name
+                    taskFields.add(fieldInfo[3]); //status
+                    taskFields.add(fieldInfo[4]); //description
+                    taskFields.add(fieldInfo[5]); //startTime
+                    taskFields.add(fieldInfo[6]); //duration
+                    loadedTaskInfo.put(fieldInfo[0], taskFields);
                 }
             }
         } catch (IOException e) {
