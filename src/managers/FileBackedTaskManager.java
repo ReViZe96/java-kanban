@@ -87,7 +87,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    private void save() {
+    public void save() {
         Map<Task, TaskType> tasksOfAllType = new TreeMap<>();
 
         Set<Map.Entry<Integer, Task>> allTaskEntrySet = InMemoryTaskManager.allTasks.entrySet();

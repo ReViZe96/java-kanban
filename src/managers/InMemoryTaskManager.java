@@ -24,6 +24,7 @@ public class InMemoryTaskManager implements TaskManager {
     public InMemoryTaskManager() {
     }
 
+    @Override
     public HashMap<Integer, Task> getAllTypeTask() {
         HashMap<Integer, Task> allTypesTasks = new HashMap<>();
         allTypesTasks.putAll(allEpics);
@@ -232,6 +233,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (allEpics.containsKey(epicId)) {
             Epic epic = allEpics.get(epicId);
             ArrayList<SubTask> subTasks = updatedEpic.getSubtasks();
+            epic.setName(updatedEpic.getName());
+            epic.setDescription(updatedEpic.getDescription());
             epic.setSubtasks(subTasks);
             epic.setStatus(calculateStatus(subTasks));
             epic.setStartTime(calculateEpicStartTime(subTasks));
@@ -295,7 +298,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
 
             if (!isTaskIntersected) {
-                allTasks.put(taskId, task);
+                allTasks.put(taskId, updatedTask);
             } else {
                 System.out.println("Задача " + task.getName() + " не будет обновлена, т. к. пересекается " +
                         "по времени с уже существующими задачами!");
@@ -305,6 +308,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    @Override
     public void removeEpicById(int id) {
         if (allEpics.containsKey(id)) {
             allEpics.remove(id);
@@ -342,7 +346,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private TaskStatus calculateStatus(ArrayList<SubTask> subTasks) {
+    public TaskStatus calculateStatus(ArrayList<SubTask> subTasks) {
         TaskStatus epicStatus;
         int newSubtaskCount = 0;
         int doneSubtaskCount = 0;
@@ -371,14 +375,14 @@ public class InMemoryTaskManager implements TaskManager {
         return epicStatus;
     }
 
-    private Optional<LocalDateTime> calculateEpicStartTime(ArrayList<SubTask> subTasks) {
+    public Optional<LocalDateTime> calculateEpicStartTime(ArrayList<SubTask> subTasks) {
         return subTasks.stream()
                 .filter(subTask -> subTask.getStartTime() != null)
                 .map(SubTask::getStartTime)
                 .min(Comparator.comparing(epoch -> epoch.toEpochSecond(ZoneOffset.UTC)));
     }
 
-    private Duration calculateEpicDuration(ArrayList<SubTask> subTasks) {
+    public Duration calculateEpicDuration(ArrayList<SubTask> subTasks) {
         long durationInSeconds = subTasks.stream()
                 .filter(subTask -> subTask.getDuration() != null)
                 .map(SubTask::getDuration)
@@ -387,9 +391,9 @@ public class InMemoryTaskManager implements TaskManager {
         return Duration.ofSeconds(durationInSeconds);
     }
 
-    private Optional<LocalDateTime> calculateEpicEndTime(ArrayList<SubTask> subTasks) {
+    public Optional<LocalDateTime> calculateEpicEndTime(ArrayList<SubTask> subTasks) {
         return subTasks.stream()
-                .filter(subTask -> subTask.getStartTime() != null)
+                .filter(subTask -> subTask.getStartTime() != null && subTask.getDuration() != null)
                 .map(SubTask::getEndTime)
                 .max(Comparator.comparing(epoch -> epoch.toEpochSecond(ZoneOffset.UTC)));
     }
@@ -410,7 +414,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     }
 
-    private static boolean isTasksIntersected(Task first, Task second) {
+    public static boolean isTasksIntersected(Task first, Task second) {
         boolean isIntersected = false;
         if (first.getEndTime().isAfter(second.getStartTime())) {
             isIntersected = true;
