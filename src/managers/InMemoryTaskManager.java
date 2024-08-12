@@ -2,16 +2,12 @@ package managers;
 
 import managers.interfaces.HistoryManager;
 import managers.interfaces.TaskManager;
-import tasks.Epic;
-import tasks.SubTask;
-import tasks.Task;
-import tasks.TaskStatus;
+import tasks.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -20,6 +16,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected static HashMap<Integer, SubTask> allSubtasks = new HashMap<>();
     protected static HashMap<Integer, Task> allTasks = new HashMap<>();
     protected static HistoryManager historyManager = Managers.getDefaultHistory();
+    protected static TreeSet<Task> tasksSortedByStartTime = new TreeSet<>();
 
     public InMemoryTaskManager() {
     }
@@ -89,8 +86,13 @@ public class InMemoryTaskManager implements TaskManager {
         Set<Map.Entry<Integer, SubTask>> subTasksEntrySet = allSubtasks.entrySet();
         for (Map.Entry<Integer, SubTask> subTaskEntry : subTasksEntrySet) {
             subTaskIds.add(subTaskEntry.getKey());
+            if (tasksSortedByStartTime.contains(subTaskEntry.getValue())) {
+                tasksSortedByStartTime.remove(subTaskEntry.getValue());
+            }
         }
+
         allSubtasks.clear();
+
         for (Integer subTaskId : subTaskIds) {
             historyManager.remove(subTaskId);
         }
@@ -102,8 +104,13 @@ public class InMemoryTaskManager implements TaskManager {
         Set<Map.Entry<Integer, Task>> tasksEntrySet = allTasks.entrySet();
         for (Map.Entry<Integer, Task> taskEntry : tasksEntrySet) {
             taskIds.add(taskEntry.getKey());
+            if (tasksSortedByStartTime.contains(taskEntry.getValue())) {
+                tasksSortedByStartTime.remove(taskEntry.getValue());
+            }
         }
+
         allTasks.clear();
+
         for (Integer taskId : taskIds) {
             historyManager.remove(taskId);
         }
@@ -185,6 +192,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (!isTaskIntersected) {
             allSubtasks.put(subTask.getId(), subTask);
+            tasksSortedByStartTime.add(subTask);
             Epic epic = subTask.getEpic();
             if (allEpics.containsValue(epic)) {
                 ArrayList<SubTask> subTasks = epic.getSubtasks();
@@ -220,6 +228,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (!isTaskIntersected) {
             allTasks.put(task.getId(), task);
+            tasksSortedByStartTime.add(task);
         } else {
             System.out.println("Задача " + task.getName() + " не будет создана, т. к. пересекается по времени с " +
                     "уже существующими задачами!");
@@ -275,6 +284,8 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.setDuration(calculateEpicDuration(subTasks));
                 epic.setEndTime(calculateEpicEndTime(subTasks));
                 allSubtasks.put(subTaskId, updatedSubTask);
+                tasksSortedByStartTime.remove(subTask);
+                tasksSortedByStartTime.add(updatedSubTask);
                 allEpics.put(epic.getId(), epic);
             } else {
                 System.out.println("Подзадача " + updatedSubTask.getName() + " не будет обновлена, т. к. пересекается " +
@@ -299,6 +310,8 @@ public class InMemoryTaskManager implements TaskManager {
 
             if (!isTaskIntersected) {
                 allTasks.put(taskId, updatedTask);
+                tasksSortedByStartTime.remove(task);
+                tasksSortedByStartTime.add(updatedTask);
             } else {
                 System.out.println("Задача " + task.getName() + " не будет обновлена, т. к. пересекается " +
                         "по времени с уже существующими задачами!");
@@ -328,6 +341,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setStatus(calculateStatus(epic.getSubtasks()));
             allEpics.put(epic.getId(), epic);
             allSubtasks.remove(id);
+            tasksSortedByStartTime.remove(subTask);
             historyManager.remove(id);
         } else {
             System.out.println("Подзадачу с идентификатором " + id + " нельзя удалить, т.к. " +
@@ -338,7 +352,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTaskById(int id) {
         if (allTasks.containsKey(id)) {
+            Task task = allTasks.get(id);
             allTasks.remove(id);
+            tasksSortedByStartTime.remove(task);
             historyManager.remove(id);
         } else {
             System.out.println("Задачу с идентификатором " + id + " нельзя удалить, т.к. " +
@@ -405,13 +421,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public TreeSet<Task> getPrioritizedTasks() {
-        TreeSet<Task> tasksSortedyStartTime = new TreeSet<>();
-        tasksSortedyStartTime.addAll(allTasks.values().stream().filter(task -> task.getStartTime() != null)
-                .collect(Collectors.toSet()));
-        tasksSortedyStartTime.addAll(allSubtasks.values().stream().filter(task -> task.getStartTime() != null)
-                .collect(Collectors.toSet()));
-        return tasksSortedyStartTime;
-
+        return tasksSortedByStartTime;
     }
 
     public static boolean isTasksIntersected(Task first, Task second) {

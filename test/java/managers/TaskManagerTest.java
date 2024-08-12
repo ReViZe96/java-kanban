@@ -490,7 +490,7 @@ public class TaskManagerTest<T extends TaskManager> {
     //FileBackedTaskManager
     @Test
     public void shouldSave() throws IOException {
-        fileBackedTaskManager.save();
+        fileBackedTaskManager.removeTaskById(1);
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader("resources/testTasksFileSave.csv"));
         StringBuilder fileContentBuilder = new StringBuilder();
@@ -500,17 +500,16 @@ public class TaskManagerTest<T extends TaskManager> {
         String fileContent = fileContentBuilder.deleteCharAt(fileContentBuilder.length() - 1).toString();
 
         String[] fileLines = fileContent.split(";");
-        Assertions.assertEquals("1,TASK,Проснуться,NEW,Необходимо проснуться в 8:00,2024-08-07T08:00,120,,", fileLines[1]);
-        Assertions.assertEquals("2,TASK,Заснуть,NEW,Постараться заснуть раньше 1:00,2024-08-08T01:00,360,,", fileLines[2]);
-        Assertions.assertEquals("3,EPIC,Заниматься спортом,NEW,Хотя бы раз в день,2024-08-10T10:00,2080,,4 5 6", fileLines[3]);
-        Assertions.assertEquals("4,SUBTASK,Подтягивания на перекладине,NEW,Подтянуться 10 раз,2024-08-10T10:00,180,3,", fileLines[4]);
-        Assertions.assertEquals("5,SUBTASK,Отжиматься от пола,NEW,Минимум 3 раза в день,2024-08-10T12:00,900,3,", fileLines[5]);
-        Assertions.assertEquals("6,SUBTASK,Жим гантели лёжа,NEW,Два и более раза за день,2024-08-10T18:00,1000,3,", fileLines[6]);
-        Assertions.assertEquals("7,EPIC,Разработать трекер задач,NEW,Создать работающее приложение,2024-09-01T09:00,8035200,,8 9", fileLines[7]);
-        Assertions.assertEquals("8,SUBTASK,Создать основу приложения,NEW,Покостылить,2024-09-01T09:00,2678400,7,", fileLines[8]);
-        Assertions.assertEquals("9,SUBTASK,Осуществить рефакторинг кода,NEW,Сделать все красиво,2024-10-14T09:00,5356800,7,", fileLines[9]);
-        Assertions.assertEquals("10,EPIC,Ничего не делать,NEW,Только не забывать дышать,2026-05-10T15:17,2249856000,,11", fileLines[10]);
-        Assertions.assertEquals("11,SUBTASK,Дышать,NEW,Размеренно и спокойно,2026-05-10T15:17,2249856000,10,", fileLines[11]);
+        Assertions.assertEquals("2,TASK,Заснуть,NEW,Постараться заснуть раньше 1:00,2024-08-08T01:00,360,,", fileLines[1]);
+        Assertions.assertEquals("3,EPIC,Заниматься спортом,NEW,Хотя бы раз в день,2024-08-10T10:00,2080,,4 5 6", fileLines[2]);
+        Assertions.assertEquals("4,SUBTASK,Подтягивания на перекладине,NEW,Подтянуться 10 раз,2024-08-10T10:00,180,3,", fileLines[3]);
+        Assertions.assertEquals("5,SUBTASK,Отжиматься от пола,NEW,Минимум 3 раза в день,2024-08-10T12:00,900,3,", fileLines[4]);
+        Assertions.assertEquals("6,SUBTASK,Жим гантели лёжа,NEW,Два и более раза за день,2024-08-10T18:00,1000,3,", fileLines[5]);
+        Assertions.assertEquals("7,EPIC,Разработать трекер задач,NEW,Создать работающее приложение,2024-09-01T09:00,8035200,,8 9", fileLines[6]);
+        Assertions.assertEquals("8,SUBTASK,Создать основу приложения,NEW,Покостылить,2024-09-01T09:00,2678400,7,", fileLines[7]);
+        Assertions.assertEquals("9,SUBTASK,Осуществить рефакторинг кода,NEW,Сделать все красиво,2024-10-14T09:00,5356800,7,", fileLines[8]);
+        Assertions.assertEquals("10,EPIC,Ничего не делать,NEW,Только не забывать дышать,2026-05-10T15:17,2249856000,,11", fileLines[9]);
+        Assertions.assertEquals("11,SUBTASK,Дышать,NEW,Размеренно и спокойно,2026-05-10T15:17,2249856000,10,", fileLines[10]);
 
     }
 }
