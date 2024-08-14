@@ -26,6 +26,11 @@ public class InMemoryTaskManagerTest {
         taskManager.removeAllSubtasks();
     }
 
+    @AfterAll
+    public static void resetIdCounter() {
+        InMemoryTaskManager.idCounter = 0;
+    }
+
     @Test
     public void shouldAddAndGetByIdEpic() {
         Epic addedEpic = new Epic("Добавляемый эпик", "added");

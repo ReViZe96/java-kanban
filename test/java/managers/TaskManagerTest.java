@@ -18,7 +18,6 @@ import java.util.*;
 
 public class TaskManagerTest<T extends TaskManager> {
 
-    private InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
     private FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(new File("resources/testTasksFileSave.csv"));
     private T taskManager = (T) Managers.getDefault();
 
@@ -401,89 +400,6 @@ public class TaskManagerTest<T extends TaskManager> {
         Assertions.assertEquals(awakening, tasksSortedByStartTime.first());
         Assertions.assertEquals(breathing, tasksSortedByStartTime.last());
         Assertions.assertTrue(awakeningStartTime.isBefore(breathingStartTiime));
-
-    }
-
-    //InMemoryTaskManager
-    @Test
-    public void shouldCalculateStatus () {
-        ArrayList<SubTask> subtasks = new ArrayList<>();
-        SubTask firstSubtask = new SubTask("firstSubtask", "first");
-        firstSubtask.setStatus(TaskStatus.NEW);
-        SubTask secondSubtask = new SubTask("secondSubtask", "second");
-        secondSubtask.setStatus(TaskStatus.IN_PROGRESS);
-        SubTask thirdSubtask = new SubTask("thirdSubtask", "third");
-        thirdSubtask.setStatus(TaskStatus.DONE);
-
-        subtasks.add(firstSubtask);
-        subtasks.add(secondSubtask);
-        subtasks.add(thirdSubtask);
-
-        TaskStatus taskStatus = inMemoryTaskManager.calculateStatus(subtasks);
-        Assertions.assertEquals(TaskStatus.IN_PROGRESS, taskStatus);
-
-    }
-
-    @Test
-    public void shouldCalculateEpicStartTime () {
-        ArrayList<SubTask> subtasks = new ArrayList<>(taskManager.getAllSubTasks());
-        //pullUps           --->    startTime = 10-08-2024 10:00
-        //pushUps           --->    startTime = 10-08-2024 12:00
-        //benchPress        --->    startTime = 10-08-2024 18:00
-        //makingCrutch      --->    startTime = 1-09-2024
-        //refactoring       --->    startTime = 14-10-2024
-        //breathing         --->    startTime = 10-05-2026
-        LocalDateTime startTime = inMemoryTaskManager.calculateEpicStartTime(subtasks).get();
-        Assertions.assertEquals(LocalDateTime.of(2024, 8, 10, 10, 0), startTime);
-    }
-
-    @Test
-    public void shouldCalculateEpicDuration () {
-        ArrayList<SubTask> subtasks = new ArrayList<>(taskManager.getAllSubTasks());
-        //pullUps           --->    duration = 180
-        //pushUps           --->    duration = 900
-        //benchPress        --->    duration = 1000
-        //makingCrutch      --->    duration = 2678400
-        //refactoring       --->    duration = 5356800
-        //breathing         --->    duration = 2249856000
-        //TOTAL             --->    duration = 2257893280
-        Duration duration = inMemoryTaskManager.calculateEpicDuration(subtasks);
-        Assertions.assertEquals(Duration.ofSeconds(2257893280L), duration);
-    }
-
-    @Test
-    public void shouldCalculateEpicEndTime () {
-        ArrayList<SubTask> subtasks = new ArrayList<>(taskManager.getAllSubTasks());
-        //pullUps           --->    startTime = 10-08-2024 10:00    duration = 180
-        //pushUps           --->    startTime = 10-08-2024 12:00    duration = 900
-        //benchPress        --->    startTime = 10-08-2024 18:00    duration = 1000
-        //makingCrutch      --->    startTime = 1-09-2024           duration = 2678400
-        //refactoring       --->    startTime = 14-10-2024          duration = 5356800
-        //breathing         --->    startTime = 10-05-2026          duration = 2249856000   ---> endTime = 25-08-2097 15:17
-        LocalDateTime endTime = inMemoryTaskManager.calculateEpicEndTime(subtasks).get();
-        Assertions.assertEquals(LocalDateTime.of(2097, 8,25, 15, 17), endTime);
-    }
-
-    @Test
-    public void isTasksIntersectedTest () {
-        Task firstTask = new Task("firstTask", "firstDescription", Duration.ofSeconds(100),
-                LocalDateTime.of(2000, 1,1,1,1));
-        Task secondTask = new Task("secondTask", "secondDescription", Duration.ofSeconds(200),
-                LocalDateTime.of(2000, 1,1,1,1));
-        Task thirdTask = new Task("thirdTask", "thirdDescription", Duration.ofSeconds(300),
-                LocalDateTime.of(2000, 1,1,2,1));
-        Task fourthTask = new Task("fourthTask", "fourthDescription", Duration.ofSeconds(400),
-                LocalDateTime.of(2000, 1,1,2,1));
-
-        boolean isIntersectedOne = InMemoryTaskManager.isTasksIntersected(firstTask, secondTask);
-        boolean isIntersectedSecond = InMemoryTaskManager.isTasksIntersected(thirdTask, fourthTask);
-        boolean isIntersectedThird = InMemoryTaskManager.isTasksIntersected(firstTask, thirdTask);
-        boolean isIntersectedFourth = InMemoryTaskManager.isTasksIntersected(secondTask, fourthTask);
-
-        Assertions.assertTrue(isIntersectedOne);
-        Assertions.assertTrue(isIntersectedSecond);
-        Assertions.assertFalse(isIntersectedThird);
-        Assertions.assertFalse(isIntersectedFourth);
 
     }
 
