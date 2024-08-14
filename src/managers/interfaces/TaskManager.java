@@ -4,9 +4,7 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public interface TaskManager {
 
@@ -49,5 +47,7 @@ public interface TaskManager {
     void removeTaskById(int id);
 
     List<Task> getHistory();
+
+    TreeSet<Task> getPrioritizedTasks();
 
 }

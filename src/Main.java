@@ -5,6 +5,8 @@ import tasks.SubTask;
 import tasks.Task;
 import tasks.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,8 +17,10 @@ public class Main {
         TaskManager tasksManager = Managers.getDefault();
         List<Task> historyOfView;
 
-        Task awakening = new Task("Проснуться", "Необходимо проснуться в 8:00");
-        Task sleeping = new Task("Заснуть", "Постараться заснуть раньше 1:00");
+        Task awakening = new Task("Проснуться", "Необходимо проснуться в 8:00",
+                Duration.ofSeconds(120), LocalDateTime.of(2024, 8, 7, 8, 0, 0));
+        Task sleeping = new Task("Заснуть", "Постараться заснуть раньше 1:00",
+                Duration.ofSeconds(360), LocalDateTime.of(2024, 8, 8, 1, 0, 0));
         tasksManager.addTask(awakening);
         tasksManager.addTask(sleeping);
         System.out.println("Созданы задачи:");
@@ -28,9 +32,15 @@ public class Main {
         System.out.println();
         System.out.println("Создан эпик:");
         System.out.println(fitness);
-        SubTask pullUps = new SubTask("Подтягивания на перекладине", "Подтянуться 10 раз", fitness);
-        SubTask pushUps = new SubTask("Отжиматься от пола", "Минимум 3 раза в день", fitness);
-        SubTask benchPress = new SubTask("Жим гантели лёжа", "Два и более раза за день", fitness);
+        SubTask pullUps = new SubTask("Подтягивания на перекладине", "Подтянуться 10 раз",
+                Duration.ofSeconds(180), LocalDateTime.of(2024, 8, 10, 10, 0, 0),
+                fitness);
+        SubTask pushUps = new SubTask("Отжиматься от пола", "Минимум 3 раза в день",
+                Duration.ofSeconds(900), LocalDateTime.of(2024, 8, 10, 12, 0, 0),
+                fitness);
+        SubTask benchPress = new SubTask("Жим гантели лёжа", "Два и более раза за день",
+                Duration.ofSeconds(1000), LocalDateTime.of(2024, 8, 10, 18, 0, 0),
+                fitness);
         tasksManager.addSubTask(pullUps);
         tasksManager.addSubTask(pushUps);
         tasksManager.addSubTask(benchPress);
@@ -45,8 +55,12 @@ public class Main {
         System.out.println();
         System.out.println("Создан эпик:");
         System.out.println(developingOfTracker);
-        SubTask makingCrutch = new SubTask("Создать основу приложения", "Покостылить", developingOfTracker);
-        SubTask refactoring = new SubTask("Осуществить рефакторинг кода", "Сделать все красиво", developingOfTracker);
+        SubTask makingCrutch = new SubTask("Создать основу приложения", "Покостылить",
+                Duration.ofDays(31), LocalDateTime.of(2024, 9, 1, 9, 0, 0),
+                developingOfTracker);
+        SubTask refactoring = new SubTask("Осуществить рефакторинг кода", "Сделать все красиво",
+                Duration.ofDays(62), LocalDateTime.of(2024, 10, 14, 9, 0, 0),
+                developingOfTracker);
         tasksManager.addSubTask(makingCrutch);
         tasksManager.addSubTask(refactoring);
         System.out.println();
@@ -59,7 +73,9 @@ public class Main {
         System.out.println();
         System.out.println("Создан эпик:");
         System.out.println(nothing);
-        SubTask breathing = new SubTask("Дышать", "Размеренно и спокойно", nothing);
+        SubTask breathing = new SubTask("Дышать", "Размеренно и спокойно",
+                Duration.ofDays(31 * 12 * 70), LocalDateTime.of(2026, 5, 10, 15, 17, 0),
+                nothing);
         tasksManager.addSubTask(breathing);
         System.out.println();
         System.out.println("Создана подзадача:");

@@ -1,17 +1,33 @@
 package tasks;
 
-public class Task implements Comparable {
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+public class Task implements Comparable<Task> {
 
     protected int id;
     protected String name;
     protected String description;
     protected TaskStatus status;
     protected TaskType taskType;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.taskType = TaskType.TASK;
+        this.status = TaskStatus.NEW;
+    }
+
+    public Task(String name, String description, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.taskType = TaskType.TASK;
+        this.status = TaskStatus.NEW;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getName() {
@@ -54,6 +70,28 @@ public class Task implements Comparable {
         this.taskType = taskType;
     }
 
+    public LocalDateTime getStartTime() {
+        return this.startTime;
+    }
+
+    public void setStartTime(Optional<LocalDateTime> startTime) {
+        if (startTime.isPresent()) {
+            this.startTime = startTime.get();
+        }
+    }
+
+    public Duration getDuration() {
+        return this.duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return this.startTime.plus(this.duration);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -74,7 +112,7 @@ public class Task implements Comparable {
     public int hashCode() {
         int hash = 0;
         if (this.id != 0) {
-            hash = (int) this.id;
+            hash = this.id;
         }
         return hash;
     }
@@ -99,14 +137,23 @@ public class Task implements Comparable {
         } else {
             result += " по каким-то причинам не имеет статуса";
         }
+        if (startTime != null) {
+            result += " Время начала - " + startTime + ".";
+        } else {
+            result += " Время начала не указана.";
+        }
+        if (duration != null) {
+            result += " Продолжительность в секундах = " + duration.toSeconds() + ".";
+        } else {
+            result += " Продолжительность не указана.";
+        }
+
         return result;
     }
 
     @Override
-    public int compareTo(Object obj) {
-        Task task = (Task) obj;
+    public int compareTo(Task task) {
         return this.id - task.getId();
 
     }
-
 }

@@ -1,6 +1,6 @@
-id,type,name,status,description,epic,subtasks
-1,TASK,task1,NEW,descriptionOfTask1,,
-2,SUBTASK,subtask1,NEW,descriptionOfSubtask1,5,
-3,SUBTASK,subtask2,NEW,descriptionOfSubtask2,5,
-4,SUBTASK,subtask3,NEW,descriptionOfSubtask3,5,
-5,EPIC,epic1,NEW,descriptionOfEpic1,,2 3 4
+id,type,name,status,description,startTime,duration,epic,subtasks
+1,TASK,task1,NEW,descriptionOfTask1,1999-01-01T01:00,1200,,
+2,SUBTASK,subtask1,NEW,descriptionOfSubtask1,2000-02-02T02:00,100,5,
+3,SUBTASK,subtask2,NEW,descriptionOfSubtask2,2001-03-03T03:00,200,5,
+4,SUBTASK,subtask3,NEW,descriptionOfSubtask3,2002-04-04T04:00,300,5,
+5,EPIC,epic1,NEW,descriptionOfEpic1,2000-02-02T02:00,600,,2 3 4
