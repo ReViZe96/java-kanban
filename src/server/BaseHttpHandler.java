@@ -11,6 +11,8 @@ public class BaseHttpHandler implements HttpHandler {
 
     protected TaskManager taskManager;
 
+    public BaseHttpHandler() {}
+
     public BaseHttpHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }

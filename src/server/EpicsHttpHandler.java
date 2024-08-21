@@ -124,7 +124,6 @@ public class EpicsHttpHandler extends BaseHttpHandler {
 
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .serializeNulls()
                 .registerTypeAdapter(LocalDateTime.class, LOCAL_DATE_TIME_TYPE_ADAPTER)
                 .registerTypeAdapter(Duration.class, DURATION_TYPE_ADAPTER)
                 .create();
