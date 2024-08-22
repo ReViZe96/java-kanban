@@ -151,7 +151,8 @@ public class InMemoryTaskManager implements TaskManager {
             task = allTasks.get(id);
             historyManager.add(task);
         } else {
-            throw new NotFoundException("Задачи с идентификатором " + id + " пока не существует");
+            System.out.println("Задачи с идентификатором " + id + " пока не существует");
+            return null;
         }
         return task;
     }

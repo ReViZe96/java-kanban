@@ -2,20 +2,16 @@ package server;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import managers.Managers;
-import managers.interfaces.HistoryManager;
-
+import managers.interfaces.TaskManager;
 import tasks.Task;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.TreeSet;
 
-public class HistoryHttpHandler extends BaseHttpHandler {
+public class PrioritizedHttpHandler extends BaseHttpHandler {
 
-    protected HistoryManager historyManager;
-
-    public HistoryHttpHandler() {
-        this.historyManager = Managers.getDefaultHistory();
+    public PrioritizedHttpHandler(TaskManager taskManager) {
+        super(taskManager);
     }
 
 
@@ -27,14 +23,14 @@ public class HistoryHttpHandler extends BaseHttpHandler {
             sendHasBadRequest(exchange);
         }
         try {
-            getHistory(exchange);
+            getPrioritizedTasks(exchange);
         } catch (Exception e) {
             sendHasBadRequest(exchange);
         }
     }
 
-    public void getHistory(HttpExchange exchange) throws IOException {
-        List<Task> historyOfView = historyManager.getHistory();
+    public void getPrioritizedTasks(HttpExchange exchange) throws IOException {
+        TreeSet<Task> historyOfView = super.taskManager.getPrioritizedTasks();
         Gson gson = createGson();
         sendText(exchange, gson.toJson(historyOfView));
     }

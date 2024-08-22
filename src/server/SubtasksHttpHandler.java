@@ -1,8 +1,6 @@
 package server;
 
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
 import managers.exceptions.NotFoundException;
 import managers.interfaces.TaskManager;
@@ -11,9 +9,6 @@ import tasks.SubTask;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class SubtasksHttpHandler extends BaseHttpHandler {
@@ -21,9 +16,6 @@ public class SubtasksHttpHandler extends BaseHttpHandler {
     public SubtasksHttpHandler(TaskManager taskManager) {
         super(taskManager);
     }
-
-    public final SubtasksHttpHandler.LocalDateTimeTypeAdapter LOCAL_DATE_TIME_TYPE_ADAPTER = new SubtasksHttpHandler.LocalDateTimeTypeAdapter();
-    public final SubtasksHttpHandler.DurationTypeAdapter DURATION_TYPE_ADAPTER = new SubtasksHttpHandler.DurationTypeAdapter();
 
 
     @Override
@@ -44,13 +36,11 @@ public class SubtasksHttpHandler extends BaseHttpHandler {
                 case "POST":
                     InputStream inputStream = exchange.getRequestBody();
                     String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-
                     JsonElement jsonElement = JsonParser.parseString(body);
                     JsonObject subTask = jsonElement.getAsJsonObject();
-
                     if (subTask.has("id")) {
                         updateSubTask(exchange, body);
-                    } else  {
+                    } else {
                         createSubTask(exchange, body);
                     }
                     break;
@@ -77,13 +67,8 @@ public class SubtasksHttpHandler extends BaseHttpHandler {
     }
 
     public void createSubTask(HttpExchange exchange, String body) throws IOException {
-        Gson gson = new GsonBuilder()
-                .serializeNulls()
-                .registerTypeAdapter(LocalDateTime.class, LOCAL_DATE_TIME_TYPE_ADAPTER)
-                .registerTypeAdapter(Duration.class, DURATION_TYPE_ADAPTER)
-                .create();
+        Gson gson = createGson();
         SubTask subTask = gson.fromJson(body, SubTask.class);
-
         if (super.taskManager.isTasksIntersected(subTask)) {
             sendHasInteractions(exchange, "Создаваемая подзадача пересекается по времени с уже существующей!");
         } else {
@@ -93,14 +78,8 @@ public class SubtasksHttpHandler extends BaseHttpHandler {
     }
 
     public void updateSubTask(HttpExchange exchange, String body) throws IOException {
-
-        Gson gson = new GsonBuilder()
-                .serializeNulls()
-                .registerTypeAdapter(LocalDateTime.class, LOCAL_DATE_TIME_TYPE_ADAPTER)
-                .registerTypeAdapter(Duration.class, DURATION_TYPE_ADAPTER)
-                .create();
+        Gson gson = createGson();
         SubTask subTask = gson.fromJson(body, SubTask.class);
-
         if (super.taskManager.isTasksIntersected(subTask)) {
             sendHasInteractions(exchange, "Обновляемая подзадача пересекается по времени с уже существующей!");
         } else {
@@ -115,16 +94,9 @@ public class SubtasksHttpHandler extends BaseHttpHandler {
     }
 
     public void getSubTaskById(HttpExchange exchange, int subTaskId) throws IOException {
-
         SubTask subTask = super.taskManager.getSubTaskById(subTaskId);
-
         if (subTask != null) {
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .serializeNulls()
-                    .registerTypeAdapter(LocalDateTime.class, LOCAL_DATE_TIME_TYPE_ADAPTER)
-                    .registerTypeAdapter(Duration.class, DURATION_TYPE_ADAPTER)
-                    .create();
+            Gson gson = createGson();
             sendText(exchange, gson.toJson(subTask));
         } else {
             sendNotFound(exchange, "Подзадача с id =" + subTaskId + " не найдена!");
@@ -133,42 +105,8 @@ public class SubtasksHttpHandler extends BaseHttpHandler {
 
     public void getAllSubTasks(HttpExchange exchange) throws IOException {
         List<SubTask> allSubTasks = super.taskManager.getAllSubTasks().stream().toList();
-
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .serializeNulls()
-                .registerTypeAdapter(LocalDateTime.class, LOCAL_DATE_TIME_TYPE_ADAPTER)
-                .registerTypeAdapter(Duration.class, DURATION_TYPE_ADAPTER)
-                .create();
+        Gson gson = createGson();
         sendText(exchange, gson.toJson(allSubTasks));
-    }
-
-
-    class LocalDateTimeTypeAdapter extends TypeAdapter<LocalDateTime> {
-        private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SS");
-
-        @Override
-        public void write(final JsonWriter jsonWriter, final LocalDateTime localTime) throws IOException {
-            jsonWriter.value(localTime.format(timeFormatter));
-        }
-
-        @Override
-        public LocalDateTime read(final JsonReader jsonReader) throws IOException {
-            return LocalDateTime.parse(jsonReader.nextString(), timeFormatter);
-        }
-    }
-
-    class DurationTypeAdapter extends TypeAdapter<Duration> {
-
-        @Override
-        public void write(final JsonWriter jsonWriter, final Duration duration) throws IOException {
-            jsonWriter.value(String.valueOf(duration));
-        }
-
-        @Override
-        public Duration read(final JsonReader jsonReader) throws IOException {
-            return Duration.parse(jsonReader.nextString());
-        }
     }
 
 }
