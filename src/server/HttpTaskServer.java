@@ -9,15 +9,13 @@ import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
 
-    private final static int PORT = 8080;
-
     public static void main(String[] args) throws IOException {
         TaskManager taskManager = Managers.getDefault();
         start(taskManager);
     }
 
     public static HttpServer start(TaskManager taskManager) throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         server.createContext("/tasks", new TasksHttpHandler(taskManager));
         server.createContext("/subtasks", new SubtasksHttpHandler(taskManager));
         server.createContext("/epics", new EpicsHttpHandler(taskManager));
