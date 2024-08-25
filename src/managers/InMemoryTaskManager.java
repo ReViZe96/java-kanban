@@ -215,10 +215,22 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addTask(Task task) {
         task.setId(++InMemoryTaskManager.idCounter);
+        task.setTaskType(TaskType.TASK);
 
         if (task.getStartTime() != null && !isTasksIntersected(task)) {
             tasksSortedByStartTime.add(task);
         }
+
+        if (task.getStatus() == null) {
+            task.setStatus(TaskStatus.NEW);
+        }
+        if (task.getStartTime() == null) {
+         task.setStartTime(Optional.of(LocalDateTime.now()));
+        }
+        if (task.getDuration() == null) {
+            task.setDuration(Duration.ofSeconds(0L));
+        }
+
         allTasks.put(task.getId(), task);
     }
 
